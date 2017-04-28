@@ -1,4 +1,5 @@
 beatrix by Ian Halbwachs  - ian.halbwachs@gmail.com - soundcloud.com/umanyes
+Play it live at https://beatrix-beta.glitch.me/
 
 A work in progress. First order of business is to let you import your own files, but the current example should give you the idea. 
 
