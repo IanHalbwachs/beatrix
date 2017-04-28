@@ -1,2 +1,1 @@
-# beatrix
-an interactive beat juggling / remixing app
+# beatrix by Ian Halbwachs  - ian.halbwachs@gmail.com - soundcloud.com/umanyes
