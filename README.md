@@ -1,7 +1,27 @@
-beatrix by Ian Halbwachs  - ian.halbwachs@gmail.com - soundcloud.com/umanyes
+Welcome to the Glitch BETA
+=========================
 
-Play it live at https://beatrix-beta.glitch.me/
+Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
 
-Hit spacebar to start/stop playing and use the mouse or keyboard to navigate the cells. Have fun Pete Rock style!
+Glitch is a developer playground that lets you code a real web-app without the slow setup and deployment steps.
 
-Many more features in the pipeline - first order of business is to let you import your own files, but the current example should give you the idea. 
+[About Glitch](https://glitch.com/about)
+sdfsdfsdf
+
+Your Project
+------------
+
+On the back-end,
+- your app starts at `server.js`
+- add frameworks and packages in `package.json`
+- safely store app secrets in `.env`
+
+On the front-end,
+- edit `public/client.js`, `public/style.css` and `views/index.html`
+- drag in `assets`, like images or music, to add them to your project
+
+
+Made by Fog Creek
+-----------------
+
+\ ゜o゜)ノ
