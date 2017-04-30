@@ -1,19 +1,39 @@
-var http = require('http');
-var server = http.createServer();
+// server.js
+// where your node app starts
 
-var volleyball = require('volleyball');
+// init project
 var express = require('express');
 var app = express();
 
-server.on('request', app);
+// we've started you off with Express, 
+// but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
-server.listen(3000, function () {
-  console.log('The server is listening on port 3000!');
+// http://expressjs.com/en/starter/static-files.html
+app.use(express.static('public'));
+
+// http://expressjs.com/en/starter/basic-routing.html
+app.get("/", function (request, response) {
+  response.sendFile(__dirname + '/views/index.html');
 });
 
-app.use(express.static(__dirname + '/public'));
-app.use(volleyball);
+app.get("/dreams", function (request, response) {
+  response.send(dreams);
+});
 
-app.get('/', function (req, res) {
-  res.sendFile('index.html');
+// could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
+app.post("/dreams", function (request, response) {
+  dreams.push(request.query.dream);
+  response.sendStatus(200);
+});
+
+// Simple in-memory store for now
+var dreams = [
+  "Find and count some sheep",
+  "Climb a really tall mountain",
+  "Wash the dishes"
+];
+
+// listen for requests :)
+var listener = app.listen(process.env.PORT, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
 });
