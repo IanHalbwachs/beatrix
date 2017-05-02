@@ -20,9 +20,6 @@ class MatrixContainer extends Component {
   componentWillReceiveProps(newProps) {
     console.log
     if (newProps.playing) {
-      //let startPos = +newProps.selected * +newProps.interval
-      // console.log(startPos)
-      //newProps.player.start(0, startPos)
       newProps.clock.start()
     }
     if (!newProps.playing) {
@@ -32,12 +29,12 @@ class MatrixContainer extends Component {
   }
   
   handleKeypress(e) {
-    console.log(e)
     let i = this.props.selected
     let x = i % 4
     let y = (i-x)/4
     switch(e.keyCode) {
       case 32: //spacebar
+        e.preventDefault()
         this.props.startStop(!this.props.playing)
         break
       case 40: //down

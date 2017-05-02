@@ -8,7 +8,8 @@ import { Provider } from 'react-redux'
 let initialState = {
   selected: '0',
   playing: false,
-  interval: null
+  interval: null,
+  file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821"
 }
 
 const SELECT_CELL = 'SELECT_CELL'
@@ -16,6 +17,7 @@ const SET_BUFFER = 'SET_BUFFER'
 const START_STOP = 'START_STOP'
 const TOCK = 'TOCK'
 const SET_CLOCK = 'SET_CLOCK'
+const SET_FILE = 'SET_FILE'
 
 export function selectCell(selected){
   return {
@@ -56,6 +58,13 @@ export function setClock(clock) {
   }
 }
 
+export function setFile(file) {
+  return {
+    type: SET_FILE,
+    file
+  }
+}
+
 let reducer = (state = initialState, action) => {
   let newState = Object.assign({}, state)
   switch (action.type) {
@@ -78,13 +87,14 @@ let reducer = (state = initialState, action) => {
     case SET_CLOCK:
       newState.clock = action.clock
       break
+    case SET_FILE:
+      newState.file = action.file
+      break
     default:
       return newState 
   }
-  // if (true) { //don't bother logging ticks
     console.log('ACTION>', action)
     console.log('STATE>', newState)
-  // }
   return newState
 }
 
@@ -95,4 +105,4 @@ render(
     <App />
   </Provider>,
   document.getElementById('root')
-);
+)

@@ -1,0 +1,33 @@
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { store, setFile } from './index.js'
+
+class FileSelector extends Component {
+  
+  constructor(props) {
+    super(props)
+    this.handleFile = this.handleFile.bind(this)
+  }
+  
+  handleFile(e) {
+    console.dir(e.target.files[0])
+    this.props.setFile(e.target.files[0])
+  }
+  
+  render() {
+    return (
+      <span id="file-selector">
+        <label style={{color: 'cornflowerblue'}}>load your own<input type="file" style={{display: 'none'}} id="input" onChange={this.handleFile}/></label>
+      </span>
+    )
+  }
+  
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return  {
+    setFile: (file) => dispatch(setFile(file))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(FileSelector)

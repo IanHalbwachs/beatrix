@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "start": "concurrently \"webpack -w\" \"node server.js\" "
-  
   },
   "author": "Ian Halbwachs",
   "license": "ISC",
@@ -27,6 +26,8 @@
     "concurrently": "^3.4.0",
     "redux-devtools-extension": "^2.13.0",
     "lodash": "^4.17.4",
-    "draw-wave": "^2.0.0"
+    "draw-wave": "^2.0.0",
+    "create-object-url": "^1.0.2",
+    "react-modal": "^1.7.7"
   }
 }

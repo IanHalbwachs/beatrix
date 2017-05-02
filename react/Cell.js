@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { store, selectCell } from './index.js'
+import { selectCell } from './index.js'
 import drawBuffer from 'draw-wave'
 import Tone from 'tone'
 
@@ -24,11 +24,10 @@ class Cell extends Component {
       this.setState({
         cellBuffer
       })
-      drawBuffer.canvas(document.querySelector(`#canvas-${this.props.id}`), cellBuffer, '#52F6A4');
+      let cellCanvas = document.querySelector(`#canvas-${this.props.id}`)
+      cellCanvas.getContext('2d').clearRect(0, 0, cellCanvas.width, cellCanvas.height)
+      drawBuffer.canvas(cellCanvas, cellBuffer, 'lightyellow');
     }
-    // if (+newProps.selected === id && newProps.player) {
-    //   newProps.player.seek(+newProps.interval*id)
-    // }
   }
   
   render() {
@@ -39,7 +38,7 @@ class Cell extends Component {
     let interval = this.props.interval
     let animationStyle = {animationDuration: interval+'s' }
     return (
-     <p id={id} data-selected={selected === id} data-active={activeCell === id} style={animationStyle} onClick={this.handleClick}>
+     <p className="cell" id={id} data-selected={selected === id} data-active={activeCell === id} style={animationStyle} onClick={this.handleClick}>
         <canvas id={'canvas-' + id}></canvas>
      </p>
     )
