@@ -15,7 +15,8 @@ const customStyles = {
     marginRight: '-25%',
     transform: 'translate(-25%, -10%)',
     backgroundColor: 'rgba(255, 255, 255, .8)',
-    lineHeight: '50px'
+    lineHeight: '50px',
+    fontSize: '30px'
   }
 };
 
@@ -57,13 +58,13 @@ class SettingsModal extends Component {
           contentLabel="Example Modal"
         >
 
-          <div style={{textAlign: 'center'}} onClick={this.closeModal}>
-            <h1 className="beatrix" style={{float: 'right'}}></h1>      
-            <h2>Thanks for checking out Beatrix, an interactive sample manipulator by <a href="https://www.linkedin.com/in/ian-halbwachs">Ian Halbwachs</a>.</h2>
-            <h2>Click the logo or hit the spacebar to start and stop playback.</h2>
-            <h2>Use your mouse or arrow keys to navigate the cells.</h2>
-            <h2>Play with the example file or <FileSelector/>!</h2>
-            <h2>Take a look <a href="https://glitch.com/edit/#!/beatrix">under the hood</a>.</h2>
+          <div style={{textAlign: 'center'}} onClick={this.closeModal}>    
+            <h1 className="beatrix" style={{float: 'right'}}></h1>
+            <p>Thanks for checking out Beatrix, an interactive sample manipulator by <a href="https://www.linkedin.com/in/ian-halbwachs">Ian Halbwachs</a>.</p>
+            <p>Click the logo or hit the spacebar to start and stop playback.</p>
+            <p>Use your mouse or arrow keys to navigate the cells.</p>
+            <p>Play with the example file or <FileSelector/>!</p>
+            <p>Take a look <a href="https://glitch.com/edit/#!/beatrix">under the hood</a>.</p>
           </div>
           
         </Modal>
