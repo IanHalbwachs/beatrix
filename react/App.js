@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import MatrixContainer from './MatrixContainer.js'
 import FileSelector from './FileSelector.js'
 import Header from './Header.js'
-import { setBuffer, startStop, setClock, tock, selectCell } from './index.js'
+import { setBuffer, startStop, setClock, tock, selectCell, touch } from './index.js'
 import Tone from 'tone'
 import createObjectUrl from 'create-object-url'
 
@@ -13,11 +13,6 @@ class App extends Component {
     super(props)
     this.tick = this.tick.bind(this)
     this.loadFile = this.loadFile.bind(this)
-    this.iosAudioContext = this.iosAudioContext.bind(this)
-    
-    this.state = {
-      touched: false
-    }
   }
   
   componentWillMount() {
@@ -25,6 +20,7 @@ class App extends Component {
   }
   
   componentWillReceiveProps(newProps) {
+    console.log(newProps)
     if (newProps.interval !== this.props.interval ) {
       let clock = new Tone.Clock((time) => {
         if (clock.ticks > 0) { // ignore glitchy 1st tick
@@ -34,7 +30,7 @@ class App extends Component {
       }, 1/newProps.interval)
       this.props.setClock(clock)
     }
-    if (newProps.file !== this.props.file) {
+    if (newProps.file !== this.props.file || newProps.touched !== this.props.touched) {
       this.loadFile(newProps.file)
     }
     if (newProps.flats !== this.props.flats) {
@@ -68,20 +64,8 @@ class App extends Component {
     this.props.tock(current) // switch 2nd arg to next for chasing behavior
     if (this.props.chase) this.props.selectCell(next)
   }
-  
-  iosAudioContext() { //incomplete
-    if (!this.state.touched) {
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      var context = new window.AudioContext();
-      // create a dummy sound - and play it immediately in same 'thread'
-      Tone.setContext(context)
-      this.loadFile(this.props.file, true)
-      this.setState({touched: true})
-    }
-  }
-  
+   
   render() {
-    
     let animationStyle = {animationDuration: this.props.interval*4+'s' }
     
     return (
@@ -104,7 +88,8 @@ const mapStateToProps = (state) => {
     selected: state.selected,
     file: state.file,
     chase: state.chase,
-    flats: state.flats
+    flats: state.flats,
+    touched: state.touched
   }
 }
   

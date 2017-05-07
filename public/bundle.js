@@ -2976,6 +2976,7 @@ exports.setClock = setClock;
 exports.setFile = setFile;
 exports.toggleChase = toggleChase;
 exports.setFlats = setFlats;
+exports.touch = touch;
 
 var _react = __webpack_require__(8);
 
@@ -3001,7 +3002,8 @@ var initialState = {
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
   chase: false,
-  flats: 0
+  flats: 0,
+  touched: false
 };
 
 var SELECT_CELL = 'SELECT_CELL';
@@ -3012,6 +3014,7 @@ var SET_CLOCK = 'SET_CLOCK';
 var SET_FILE = 'SET_FILE';
 var TOGGLE_CHASE = 'TOGGLE_CHASE';
 var SET_FLATS = 'SET_FLATS';
+var TOUCH = 'TOUCH';
 
 function selectCell(selected) {
   return {
@@ -3074,6 +3077,13 @@ function setFlats(flats) {
   };
 }
 
+function touch(bool) {
+  return {
+    type: TOUCH,
+    touched: bool
+  };
+}
+
 var reducer = function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
@@ -3108,6 +3118,9 @@ var reducer = function reducer() {
       break;
     case SET_FLATS:
       newState.flats = action.flats;
+      break;
+    case TOUCH:
+      newState.touched = action.touched;
       break;
     default:
       return newState;
@@ -21266,6 +21279,7 @@ var FileSelector = function (_Component) {
     value: function handleFile(e) {
       console.log(e.target.files[0]);
       this.props.setFile(e.target.files[0]);
+      this.props.close();
     }
   }, {
     key: 'render',
@@ -21390,11 +21404,6 @@ var App = function (_Component) {
 
     _this.tick = _this.tick.bind(_this);
     _this.loadFile = _this.loadFile.bind(_this);
-    _this.iosAudioContext = _this.iosAudioContext.bind(_this);
-
-    _this.state = {
-      touched: false
-    };
     return _this;
   }
 
@@ -21408,6 +21417,7 @@ var App = function (_Component) {
     value: function componentWillReceiveProps(newProps) {
       var _this2 = this;
 
+      console.log(newProps);
       if (newProps.interval !== this.props.interval) {
         var clock = new _tone2.default.Clock(function (time) {
           if (clock.ticks > 0) {
@@ -21418,7 +21428,7 @@ var App = function (_Component) {
         }, 1 / newProps.interval);
         this.props.setClock(clock);
       }
-      if (newProps.file !== this.props.file) {
+      if (newProps.file !== this.props.file || newProps.touched !== this.props.touched) {
         this.loadFile(newProps.file);
       }
       if (newProps.flats !== this.props.flats) {
@@ -21457,22 +21467,8 @@ var App = function (_Component) {
       if (this.props.chase) this.props.selectCell(next);
     }
   }, {
-    key: 'iosAudioContext',
-    value: function iosAudioContext() {
-      //incomplete
-      if (!this.state.touched) {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        var context = new window.AudioContext();
-        // create a dummy sound - and play it immediately in same 'thread'
-        _tone2.default.setContext(context);
-        this.loadFile(this.props.file, true);
-        this.setState({ touched: true });
-      }
-    }
-  }, {
     key: 'render',
     value: function render() {
-
       var animationStyle = { animationDuration: this.props.interval * 4 + 's' };
 
       return _react2.default.createElement(
@@ -21496,7 +21492,8 @@ var mapStateToProps = function mapStateToProps(state) {
     selected: state.selected,
     file: state.file,
     chase: state.chase,
-    flats: state.flats
+    flats: state.flats,
+    touched: state.touched
   };
 };
 
@@ -37047,9 +37044,15 @@ var _reactModal = __webpack_require__(215);
 
 var _reactModal2 = _interopRequireDefault(_reactModal);
 
+var _index = __webpack_require__(23);
+
 var _FileSelector = __webpack_require__(102);
 
 var _FileSelector2 = _interopRequireDefault(_FileSelector);
+
+var _tone = __webpack_require__(100);
+
+var _tone2 = _interopRequireDefault(_tone);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37108,6 +37111,18 @@ var SettingsModal = function (_Component) {
     key: 'closeModal',
     value: function closeModal() {
       this.setState({ modalIsOpen: false });
+      if (!this.props.touched) this.iosAudioContext();
+    }
+  }, {
+    key: 'iosAudioContext',
+    value: function iosAudioContext() {
+      //incomplete
+      console.log('hit');
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      var context = new window.AudioContext();
+      _tone2.default.setContext(context);
+      //need to re-load file
+      this.props.touch(true);
     }
   }, {
     key: 'render',
@@ -37154,7 +37169,7 @@ var SettingsModal = function (_Component) {
               'p',
               null,
               'Play with the example file or ',
-              _react2.default.createElement(_FileSelector2.default, null),
+              _react2.default.createElement(_FileSelector2.default, { close: this.closeModal }),
               '!'
             ),
             _react2.default.createElement(
@@ -37177,7 +37192,21 @@ var SettingsModal = function (_Component) {
   return SettingsModal;
 }(_react.Component);
 
-exports.default = (0, _reactRedux.connect)()(SettingsModal);
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    touched: state.touched
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    touch: function touch(touched) {
+      return dispatch((0, _index.touch)(touched));
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SettingsModal);
 
 /***/ })
 /******/ ]);
