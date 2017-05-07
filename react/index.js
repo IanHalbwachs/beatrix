@@ -11,7 +11,8 @@ let initialState = {
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
   chase: false,
-  flats: 0
+  flats: 0,
+  touched: false
 }
 
 const SELECT_CELL = 'SELECT_CELL'
@@ -22,6 +23,7 @@ const SET_CLOCK = 'SET_CLOCK'
 const SET_FILE = 'SET_FILE'
 const TOGGLE_CHASE = 'TOGGLE_CHASE'
 const SET_FLATS = 'SET_FLATS'
+const TOUCH = 'TOUCH'
 
 export function selectCell(selected){
   return {
@@ -84,6 +86,13 @@ export function setFlats(flats) {
   }
 }
 
+export function touch(bool) {
+  return {
+    type: TOUCH,
+    touched: bool
+  }
+}
+
 let reducer = (state = initialState, action) => {
   let newState = Object.assign({}, state)
   switch (action.type) {
@@ -115,6 +124,9 @@ let reducer = (state = initialState, action) => {
       break
     case SET_FLATS:
       newState.flats = action.flats
+      break
+    case TOUCH:
+      newState.touched = action.touched
       break
     default:
       return newState 

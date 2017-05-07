@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import Modal from 'react-modal';
+import { touch } from './index.js'
 import FileSelector from './FileSelector'
+import Tone from 'tone'
 
 const appElement = document.getElementById('hamburger');
 
@@ -44,6 +46,16 @@ class SettingsModal extends Component {
 
   closeModal() {
     this.setState({modalIsOpen: false})
+    if (!this.props.touched) this.iosAudioContext()
+  }
+  
+  iosAudioContext() { //incomplete
+      console.log('hit')
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      var context = new window.AudioContext();
+      Tone.setContext(context)
+      //need to re-load file
+      this.props.touch(true)
   }
 
   render() {
@@ -63,7 +75,7 @@ class SettingsModal extends Component {
             <p>Thanks for checking out Beatrix, an interactive sample manipulator by <a href="https://www.linkedin.com/in/ian-halbwachs">Ian Halbwachs</a>.</p>
             <p>Click the logo or hit the spacebar to start and stop playback.</p>
             <p>Use your mouse or arrow keys to navigate the cells.</p>
-            <p>Play with the example file or <FileSelector/>!</p>
+            <p>Play with the example file or <FileSelector close={this.closeModal}/>!</p>
             <p>Take a look <a href="https://glitch.com/edit/#!/beatrix">under the hood</a>.</p>
           </div>
           
@@ -73,4 +85,16 @@ class SettingsModal extends Component {
   }
 }
 
-export default connect()(SettingsModal)
+const mapStateToProps = (state) => {
+  return {
+    touched: state.touched
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    touch: (touched) => dispatch(touch(touched)) 
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsModal)

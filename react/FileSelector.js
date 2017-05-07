@@ -12,6 +12,7 @@ class FileSelector extends Component {
   handleFile(e) {
     console.log(e.target.files[0])
     this.props.setFile(e.target.files[0])
+    this.props.close()
   }
   
   render() {
