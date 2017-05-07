@@ -28,6 +28,7 @@ class MatrixContainer extends Component {
   }
   
   handleKeypress(e) {
+    if (!this.props.touched) return
     let i = this.props.selected
     let x = i % 4
     let y = (i-x)/4
@@ -92,7 +93,7 @@ const mapStateToProps = (state) => {
     playing: state.playing,
     player: state.player,
     clock: state.clock,
-    // tick: state.tick
+    touched: state.touched
   }
 }
 

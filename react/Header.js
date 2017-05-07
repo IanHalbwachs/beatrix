@@ -13,8 +13,20 @@ class Header extends Component {
     super()
     this.handleFlats = this.handleFlats.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
-    
-    this.toggleIcon = '>◼<'
+  }
+
+  componentWillReceiveProps(newProps) {
+    switch(newProps.chase) {
+      case 'on': this.toggleIcon = '>◼>'
+        break
+      case 'off': this.toggleIcon = '>◼<'
+        break
+      case 'random': this.toggleIcon = '>◼?'
+        break
+      default: this.toggleIcon = '>◼>'
+        break
+    }
+    return
   }
 
   handleFlats(direction) {
@@ -35,15 +47,15 @@ class Header extends Component {
     switch (this.props.chase) {
       case 'off':
         chase = 'on'
-        this.toggleIcon = '>◼>'
+        //this.toggleIcon = '>◼>'
         break
       case 'on':
         chase = 'random'
-        this.toggleIcon = '>◼?'
+        //this.toggleIcon = '>◼?'
         break      
       case 'random':
         chase = 'off'
-        this.toggleIcon = '>◼<'
+        //this.toggleIcon = '>◼<'
         break
     }
     this.props.toggleChase(chase)

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import Modal from 'react-modal';
-import { touch } from './index.js'
+import { touch, startStop } from './index.js'
 import FileSelector from './FileSelector'
 import Tone from 'tone'
 
@@ -37,6 +37,7 @@ class SettingsModal extends Component {
   }
 
   openModal() {
+    this.props.stop()
     this.setState({modalIsOpen: true})
   }
 
@@ -91,7 +92,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    touch: (touched) => dispatch(touch(touched)) 
+    touch: (touched) => dispatch(touch(touched)),
+    stop: ()=> dispatch(startStop(false))
   }
 }
 

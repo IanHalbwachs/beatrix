@@ -9,7 +9,7 @@
 /* *::selection { background: transparent; } */
 
 #app {
-  background: linear-gradient(to right, cornflowerblue, orange 50%, cornflowerblue);
+  background: linear-gradient(to right, cornflowerblue, sandybrown 50%, cornflowerblue);
   background-size: auto 200%;
   transition: background-position 10s;
 } 

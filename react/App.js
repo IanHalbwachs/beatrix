@@ -38,7 +38,7 @@ class App extends Component {
   
   loadFile(file) {
     let url = typeof file === 'object' ? createObjectUrl(file) : file
-    let env = new Tone.ScaledEnvelope(0.001,0,1,0.001)
+    let env = new Tone.ScaledEnvelope(0.005,0,1,.005)
     env.min = 1
     env.max = 0
     let gain = new Tone.Gain().toMaster()
@@ -54,7 +54,7 @@ class App extends Component {
   tick(time) {
     console.log('tick', time)
     let startPos = +this.props.selected * +this.props.interval
-    this.props.env.triggerAttackRelease(0.0015, time-0.001)
+    this.props.env.triggerAttackRelease(0.005, time-0.005)
     this.props.player.start(time, startPos)
     let current = this.props.selected
     let next = (+this.props.selected + 1)%16 +''
