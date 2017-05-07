@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import SettingsModal from './SettingsModal.js'
+import Tempo from './Tempo.js'
 import { startStop, toggleChase, setFlats } from './index.js'
 
 
@@ -14,7 +15,6 @@ class Header extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     
     this.toggleIcon = '>◼<'
-    
   }
 
   handleFlats(direction) {
@@ -29,8 +29,6 @@ class Header extends Component {
     }
     return
   }
-
-  //chaseIcon fn
 
   handleToggle() {
     let chase
@@ -48,7 +46,6 @@ class Header extends Component {
         this.toggleIcon = '>◼<'
         break
     }
-    console.log(chase, this.props.chase)
     this.props.toggleChase(chase)
   }
 
@@ -66,13 +63,15 @@ class Header extends Component {
           </p>
           <Space/>        
           <p className="control" 
+            style={{width: '7%'}}
             onClick={this.handleToggle}>
             {this.toggleIcon}
           </p>
           <Space/> 
           <p className="control" style={{fontSize: '30px'}} onClick={()=> this.handleFlats('down')}>⬇</p>
           <p className="control" style={{fontSize: '30px'}} onClick={()=> this.handleFlats('up')}>⬆</p>
-          <p className="control">♭{this.props.flats}</p>
+          <p className="control" style={{width: '10%'}}>♭{this.props.flats}</p>
+          <Tempo/>
         </div>
     </div>
     )
@@ -83,7 +82,7 @@ class Header extends Component {
 const mapStateToProps = (state) => {
   return { 
     //selected: state.selected,
-    //interval: state.interval,
+    interval: state.interval,
     playing: state.playing,
     player: state.player,
     //clock: state.clock,

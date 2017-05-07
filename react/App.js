@@ -20,12 +20,10 @@ class App extends Component {
   }
   
   componentWillReceiveProps(newProps) {
-    console.log(newProps)
     if (newProps.interval !== this.props.interval ) {
       let clock = new Tone.Clock((time) => {
         if (clock.ticks > 0) { // ignore glitchy 1st tick
           this.tick(time)
-          console.log('tick')
         }
       }, 1/newProps.interval)
       this.props.setClock(clock)
@@ -34,7 +32,6 @@ class App extends Component {
       this.loadFile(newProps.file)
     }
     if (newProps.flats !== this.props.flats) {
-      console.log('hit')
       this.props.player.playbackRate = 1/Math.pow(2, newProps.flats/12)
     }
   }
@@ -55,7 +52,7 @@ class App extends Component {
   }
   
   tick(time) {
-    console.log('tick')
+    console.log('tick', time)
     let startPos = +this.props.selected * +this.props.interval
     this.props.env.triggerAttackRelease(0.0015, time-0.001)
     this.props.player.start(time, startPos)
@@ -64,8 +61,8 @@ class App extends Component {
     this.props.tock(current) // switch 2nd arg to next for chasing behavior
     if (this.props.chase === 'on') this.props.selectCell(next)
     if (this.props.chase === 'random') {
-      if (Math.random() > 0.3) {
-        this.props.selectCell(Math.floor(Math.random()*16))
+      if (Math.random() < 0.4) {
+        this.props.selectCell(Math.floor(Math.random()*16)+'')
       } else {
         this.props.selectCell(next)
       }

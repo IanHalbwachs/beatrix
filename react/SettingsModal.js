@@ -49,12 +49,10 @@ class SettingsModal extends Component {
     if (!this.props.touched) this.iosAudioContext()
   }
   
-  iosAudioContext() { //incomplete
-      console.log('hit')
+  iosAudioContext() {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       Tone.setContext(context)
-      //need to re-load file
       this.props.touch(true)
   }
 
