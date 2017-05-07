@@ -2974,6 +2974,7 @@ exports.startStop = startStop;
 exports.tock = tock;
 exports.setClock = setClock;
 exports.setFile = setFile;
+exports.toggleChase = toggleChase;
 
 var _react = __webpack_require__(8);
 
@@ -2997,7 +2998,8 @@ var initialState = {
   selected: '0',
   playing: false,
   interval: null,
-  file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821"
+  file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
+  chase: false
 };
 
 var SELECT_CELL = 'SELECT_CELL';
@@ -3006,6 +3008,7 @@ var START_STOP = 'START_STOP';
 var TOCK = 'TOCK';
 var SET_CLOCK = 'SET_CLOCK';
 var SET_FILE = 'SET_FILE';
+var TOGGLE_CHASE = 'TOGGLE_CHASE';
 
 function selectCell(selected) {
   return {
@@ -3053,6 +3056,13 @@ function setFile(file) {
   };
 }
 
+function toggleChase(chase) {
+  return {
+    type: TOGGLE_CHASE,
+    chase: chase
+  };
+}
+
 var reducer = function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
@@ -3080,6 +3090,9 @@ var reducer = function reducer() {
       break;
     case SET_FILE:
       newState.file = action.file;
+      break;
+    case TOGGLE_CHASE:
+      newState.chase = action.chase;
       break;
     default:
       return newState;
@@ -21415,7 +21428,8 @@ var App = function (_Component) {
       this.props.player.start(time, startPos);
       var current = this.props.selected;
       var next = (+this.props.selected + 1) % 16 + '';
-      this.props.tock(current, current); // switch 2nd arg to next for chasing behavior
+      this.props.tock(current); // switch 2nd arg to next for chasing behavior
+      if (this.props.chase) this.props.selectCell(next);
     }
   }, {
     key: 'iosAudioContext',
@@ -21454,7 +21468,8 @@ var mapStateToProps = function mapStateToProps(state) {
     interval: state.interval,
     player: state.player,
     selected: state.selected,
-    file: state.file
+    file: state.file,
+    chase: state.chase
   };
 };
 
@@ -21471,6 +21486,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     tock: function tock(current) {
       return dispatch((0, _index.tock)(current));
+    },
+    selectCell: function selectCell(next) {
+      return dispatch((0, _index.selectCell)(next));
     }
   };
 };
@@ -36693,6 +36711,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var Space = function Space() {
+  return _react2.default.createElement('p', { style: { width: '5%' } });
+};
+
 var Header = function (_Component) {
   _inherits(Header, _Component);
 
@@ -36720,16 +36742,23 @@ var Header = function (_Component) {
           { className: 'left' },
           _react2.default.createElement(
             'p',
-            { className: 'beatrix', onClick: function onClick() {
+            { className: 'beatrix',
+              onClick: function onClick() {
                 return _this2.props.startStop(!_this2.props.playing);
               } },
             'BEATRIX'
           ),
+          _react2.default.createElement(Space, null),
           _react2.default.createElement(
             'p',
-            null,
-            ' '
-          )
+            { className: 'control',
+              onClick: function onClick() {
+                return _this2.props.toggleChase(!_this2.props.chase);
+              },
+              'data-on': this.props.chase },
+            '>\u25FC>'
+          ),
+          _react2.default.createElement(Space, null)
         )
       );
     }
@@ -36742,7 +36771,11 @@ var mapStateToProps = function mapStateToProps(state) {
   return {
     //selected: state.selected,
     //interval: state.interval,
-    playing: state.playing
+    playing: state.playing,
+    //player: state.player,
+    //clock: state.clock,
+    // tick: state.tick,
+    chase: state.chase
   };
 };
 
@@ -36751,6 +36784,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     //setBuffer: (buffer, player) => dispatch(setBuffer(buffer, player)),
     startStop: function startStop(playing) {
       return dispatch((0, _index.startStop)(playing));
+    },
+    //setClock: (clock) => dispatch(setClock(ctoggleChase(chase)),
+    toggleChase: function toggleChase(chase) {
+      return dispatch((0, _index.toggleChase)(chase));
     }
   };
 };

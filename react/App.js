@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import MatrixContainer from './MatrixContainer.js'
 import FileSelector from './FileSelector.js'
 import Header from './Header.js'
-import { setBuffer, startStop, setClock, tock } from './index.js'
+import { setBuffer, startStop, setClock, tock, selectCell } from './index.js'
 import Tone from 'tone'
 import createObjectUrl from 'create-object-url'
 
@@ -55,7 +55,8 @@ class App extends Component {
     this.props.player.start(time, startPos)
     let current = this.props.selected
     let next = (+this.props.selected + 1)%16 +''
-    this.props.tock(current, current) // switch 2nd arg to next for chasing behavior
+    this.props.tock(current) // switch 2nd arg to next for chasing behavior
+    if (this.props.chase) this.props.selectCell(next)
   }
   
   iosAudioContext() { //incomplete
@@ -90,7 +91,8 @@ const mapStateToProps = (state) => {
     interval: state.interval,
     player: state.player,
     selected: state.selected,
-    file: state.file
+    file: state.file,
+    chase: state.chase
   }
 }
   
@@ -99,7 +101,8 @@ const mapDispatchToProps = (dispatch) => {
     setBuffer: (buffer, player) => dispatch(setBuffer(buffer, player)),
     startStop: (playing) => dispatch(startStop(playing)),
     setClock: (clock) => dispatch(setClock(clock)),
-    tock: (current) => dispatch(tock(current))
+    tock: (current) => dispatch(tock(current)),
+    selectCell: (next) => dispatch(selectCell(next))
   }
 }
 
