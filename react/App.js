@@ -37,14 +37,23 @@ class App extends Component {
     if (newProps.file !== this.props.file) {
       this.loadFile(newProps.file)
     }
+    if (newProps.flats !== this.props.flats) {
+      console.log('hit')
+      this.props.player.playbackRate = 1/Math.pow(2, newProps.flats/12)
+    }
   }
   
   loadFile(file) {
     let url = typeof file === 'object' ? createObjectUrl(file) : file
-      let newBuffer = new Tone.Buffer(url, () => {
+    let env = new Tone.ScaledEnvelope(0.001,0,1,0.001)
+    env.min = 1
+    env.max = 0
+    let gain = new Tone.Gain().toMaster()
+    env.connect(gain.gain)
+    let newBuffer = new Tone.Buffer(url, () => {
         let newPlayer = new Tone.Player(url, ()=> {
-            this.props.setBuffer(newBuffer, newPlayer)
-        }).toMaster() // should be able to pass buffer in to player per docs but is no work
+            this.props.setBuffer(newBuffer, newPlayer, env)
+        }).connect(gain) // should be able to pass buffer in to player per docs but is no work
       newPlayer.loop = true
     })
   }
@@ -52,6 +61,7 @@ class App extends Component {
   tick(time) {
     console.log('tick')
     let startPos = +this.props.selected * +this.props.interval
+    this.props.env.triggerAttackRelease(0.0015, time-0.001)
     this.props.player.start(time, startPos)
     let current = this.props.selected
     let next = (+this.props.selected + 1)%16 +''
@@ -90,15 +100,17 @@ const mapStateToProps = (state) => {
     playing: state.playing,
     interval: state.interval,
     player: state.player,
+    env: state.env,
     selected: state.selected,
     file: state.file,
-    chase: state.chase
+    chase: state.chase,
+    flats: state.flats
   }
 }
   
 const mapDispatchToProps = (dispatch) => {
   return {
-    setBuffer: (buffer, player) => dispatch(setBuffer(buffer, player)),
+    setBuffer: (buffer, player, env) => dispatch(setBuffer(buffer, player, env)),
     startStop: (playing) => dispatch(startStop(playing)),
     setClock: (clock) => dispatch(setClock(clock)),
     tock: (current) => dispatch(tock(current)),

@@ -37,9 +37,10 @@ class Cell extends Component {
     let id = this.props.id
     let interval = this.props.interval
     let animationStyle = {animationDuration: interval+'s' }
+    let width = {width: 100*Math.pow(2, this.props.flats/12) + "%"}
     return (
      <p className="cell" id={id} data-selected={selected === id} data-active={activeCell === id} style={animationStyle} onClick={this.handleClick}>
-        <canvas id={'canvas-' + id}></canvas>
+        <canvas id={'canvas-' + id} style={width}></canvas>
      </p>
     )
   }
@@ -51,7 +52,8 @@ const mapStateToProps = (state) => {
     buffer: state.buffer,
     player: state.player,
     interval: state.interval,
-    activeCell: state.activeCell
+    activeCell: state.activeCell,
+    flats: state.flats
   }
 }
 

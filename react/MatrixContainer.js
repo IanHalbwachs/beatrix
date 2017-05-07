@@ -18,7 +18,6 @@ class MatrixContainer extends Component {
   }
   
   componentWillReceiveProps(newProps) {
-    console.log
     if (newProps.playing) {
       newProps.clock.start()
     }

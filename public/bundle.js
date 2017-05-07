@@ -2975,6 +2975,7 @@ exports.tock = tock;
 exports.setClock = setClock;
 exports.setFile = setFile;
 exports.toggleChase = toggleChase;
+exports.setFlats = setFlats;
 
 var _react = __webpack_require__(8);
 
@@ -2999,7 +3000,8 @@ var initialState = {
   playing: false,
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
-  chase: false
+  chase: false,
+  flats: 0
 };
 
 var SELECT_CELL = 'SELECT_CELL';
@@ -3009,6 +3011,7 @@ var TOCK = 'TOCK';
 var SET_CLOCK = 'SET_CLOCK';
 var SET_FILE = 'SET_FILE';
 var TOGGLE_CHASE = 'TOGGLE_CHASE';
+var SET_FLATS = 'SET_FLATS';
 
 function selectCell(selected) {
   return {
@@ -3017,11 +3020,12 @@ function selectCell(selected) {
   };
 }
 
-function setBuffer(buffer, player) {
+function setBuffer(buffer, player, env) {
   return {
     type: SET_BUFFER,
     buffer: buffer,
     player: player,
+    env: env,
     duration: buffer.duration,
     interval: buffer.duration / 16
   };
@@ -3063,6 +3067,13 @@ function toggleChase(chase) {
   };
 }
 
+function setFlats(flats) {
+  return {
+    type: SET_FLATS,
+    flats: flats
+  };
+}
+
 var reducer = function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
@@ -3077,6 +3088,7 @@ var reducer = function reducer() {
       newState.player = action.player;
       newState.duration = action.duration;
       newState.interval = action.interval;
+      newState.env = action.env;
       break;
     case START_STOP:
       newState.playing = action.playing;
@@ -3093,6 +3105,9 @@ var reducer = function reducer() {
       break;
     case TOGGLE_CHASE:
       newState.chase = action.chase;
+      break;
+    case SET_FLATS:
+      newState.flats = action.flats;
       break;
     default:
       return newState;
@@ -21249,7 +21264,7 @@ var FileSelector = function (_Component) {
   _createClass(FileSelector, [{
     key: 'handleFile',
     value: function handleFile(e) {
-      console.dir(e.target.files[0]);
+      console.log(e.target.files[0]);
       this.props.setFile(e.target.files[0]);
     }
   }, {
@@ -21406,6 +21421,10 @@ var App = function (_Component) {
       if (newProps.file !== this.props.file) {
         this.loadFile(newProps.file);
       }
+      if (newProps.flats !== this.props.flats) {
+        console.log('hit');
+        this.props.player.playbackRate = 1 / Math.pow(2, newProps.flats / 12);
+      }
     }
   }, {
     key: 'loadFile',
@@ -21413,10 +21432,15 @@ var App = function (_Component) {
       var _this3 = this;
 
       var url = (typeof file === 'undefined' ? 'undefined' : _typeof(file)) === 'object' ? (0, _createObjectUrl2.default)(file) : file;
+      var env = new _tone2.default.ScaledEnvelope(0.001, 0, 1, 0.001);
+      env.min = 1;
+      env.max = 0;
+      var gain = new _tone2.default.Gain().toMaster();
+      env.connect(gain.gain);
       var newBuffer = new _tone2.default.Buffer(url, function () {
         var newPlayer = new _tone2.default.Player(url, function () {
-          _this3.props.setBuffer(newBuffer, newPlayer);
-        }).toMaster(); // should be able to pass buffer in to player per docs but is no work
+          _this3.props.setBuffer(newBuffer, newPlayer, env);
+        }).connect(gain); // should be able to pass buffer in to player per docs but is no work
         newPlayer.loop = true;
       });
     }
@@ -21425,6 +21449,7 @@ var App = function (_Component) {
     value: function tick(time) {
       console.log('tick');
       var startPos = +this.props.selected * +this.props.interval;
+      this.props.env.triggerAttackRelease(0.0015, time - 0.001);
       this.props.player.start(time, startPos);
       var current = this.props.selected;
       var next = (+this.props.selected + 1) % 16 + '';
@@ -21467,16 +21492,18 @@ var mapStateToProps = function mapStateToProps(state) {
     playing: state.playing,
     interval: state.interval,
     player: state.player,
+    env: state.env,
     selected: state.selected,
     file: state.file,
-    chase: state.chase
+    chase: state.chase,
+    flats: state.flats
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    setBuffer: function setBuffer(buffer, player) {
-      return dispatch((0, _index.setBuffer)(buffer, player));
+    setBuffer: function setBuffer(buffer, player, env) {
+      return dispatch((0, _index.setBuffer)(buffer, player, env));
     },
     startStop: function startStop(playing) {
       return dispatch((0, _index.startStop)(playing));
@@ -36647,10 +36674,11 @@ var Cell = function (_Component) {
       var id = this.props.id;
       var interval = this.props.interval;
       var animationStyle = { animationDuration: interval + 's' };
+      var width = { width: 100 * Math.pow(2, this.props.flats / 12) + "%" };
       return _react2.default.createElement(
         'p',
         { className: 'cell', id: id, 'data-selected': selected === id, 'data-active': activeCell === id, style: animationStyle, onClick: this.handleClick },
-        _react2.default.createElement('canvas', { id: 'canvas-' + id })
+        _react2.default.createElement('canvas', { id: 'canvas-' + id, style: width })
       );
     }
   }]);
@@ -36664,7 +36692,8 @@ var mapStateToProps = function mapStateToProps(state) {
     buffer: state.buffer,
     player: state.player,
     interval: state.interval,
-    activeCell: state.activeCell
+    activeCell: state.activeCell,
+    flats: state.flats
   };
 };
 
@@ -36721,10 +36750,27 @@ var Header = function (_Component) {
   function Header() {
     _classCallCheck(this, Header);
 
-    return _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
+    var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
+
+    _this.handleFlats = _this.handleFlats.bind(_this);
+    return _this;
   }
 
   _createClass(Header, [{
+    key: 'handleFlats',
+    value: function handleFlats(direction) {
+      var flats = this.props.flats;
+      if (direction === 'up' && flats > 0) {
+        console.log("up", flats, flats - 1);
+        return this.props.setFlats(flats - 1);
+      }
+      if (direction === 'down' && flats < 12) {
+        console.log("down", flats, flats + 1);
+        return this.props.setFlats(flats + 1);
+      }
+      return;
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -36754,11 +36800,30 @@ var Header = function (_Component) {
             { className: 'control',
               onClick: function onClick() {
                 return _this2.props.toggleChase(!_this2.props.chase);
-              },
-              'data-on': this.props.chase },
-            '>\u25FC>'
+              } },
+            this.props.chase ? ">◼>" : ">◼<"
           ),
-          _react2.default.createElement(Space, null)
+          _react2.default.createElement(Space, null),
+          _react2.default.createElement(
+            'p',
+            { className: 'control', onClick: function onClick() {
+                return _this2.handleFlats('down');
+              } },
+            '\u2B07'
+          ),
+          _react2.default.createElement(
+            'p',
+            { className: 'control', onClick: function onClick() {
+                return _this2.handleFlats('up');
+              } },
+            '\u2B06'
+          ),
+          _react2.default.createElement(
+            'p',
+            { className: 'control' },
+            '\u266D',
+            this.props.flats
+          )
         )
       );
     }
@@ -36772,10 +36837,11 @@ var mapStateToProps = function mapStateToProps(state) {
     //selected: state.selected,
     //interval: state.interval,
     playing: state.playing,
-    //player: state.player,
+    player: state.player,
     //clock: state.clock,
     // tick: state.tick,
-    chase: state.chase
+    chase: state.chase,
+    flats: state.flats
   };
 };
 
@@ -36788,6 +36854,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     //setClock: (clock) => dispatch(setClock(ctoggleChase(chase)),
     toggleChase: function toggleChase(chase) {
       return dispatch((0, _index.toggleChase)(chase));
+    },
+    setFlats: function setFlats(flats) {
+      return dispatch((0, _index.setFlats)(flats));
     }
   };
 };
@@ -36847,7 +36916,6 @@ var MatrixContainer = function (_Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(newProps) {
-      console.log;
       if (newProps.playing) {
         newProps.clock.start();
       }
@@ -37059,7 +37127,7 @@ var SettingsModal = function (_Component) {
           },
           _react2.default.createElement(
             'div',
-            { style: { textAlign: 'center' }, onClick: this.closeModal },
+            { style: { textAlign: 'center' } },
             _react2.default.createElement('h1', { className: 'beatrix', style: { float: 'right' } }),
             _react2.default.createElement(
               'p',
