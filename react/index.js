@@ -10,7 +10,7 @@ let initialState = {
   playing: false,
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
-  chase: false,
+  chase: 'off',
   flats: 0,
   touched: false
 }

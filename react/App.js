@@ -62,7 +62,15 @@ class App extends Component {
     let current = this.props.selected
     let next = (+this.props.selected + 1)%16 +''
     this.props.tock(current) // switch 2nd arg to next for chasing behavior
-    if (this.props.chase) this.props.selectCell(next)
+    if (this.props.chase === 'on') this.props.selectCell(next)
+    if (this.props.chase === 'random') {
+      if (Math.random() > 0.3) {
+        this.props.selectCell(Math.floor(Math.random()*16))
+      } else {
+        this.props.selectCell(next)
+      }
+    }
+
   }
    
   render() {
