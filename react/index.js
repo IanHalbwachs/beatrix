@@ -10,7 +10,8 @@ let initialState = {
   playing: false,
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
-  chase: false
+  chase: false,
+  flats: 0
 }
 
 const SELECT_CELL = 'SELECT_CELL'
@@ -20,6 +21,7 @@ const TOCK = 'TOCK'
 const SET_CLOCK = 'SET_CLOCK'
 const SET_FILE = 'SET_FILE'
 const TOGGLE_CHASE = 'TOGGLE_CHASE'
+const SET_FLATS = 'SET_FLATS'
 
 export function selectCell(selected){
   return {
@@ -28,11 +30,12 @@ export function selectCell(selected){
   }
 }
 
-export function setBuffer(buffer, player) {
+export function setBuffer(buffer, player, env) {
   return {
     type: SET_BUFFER,
     buffer,
     player,
+    env,
     duration: buffer.duration,
     interval: buffer.duration/16
   }
@@ -74,6 +77,13 @@ export function toggleChase(chase) {
   }
 }
 
+export function setFlats(flats) {
+  return {
+    type: SET_FLATS,
+    flats
+  }
+}
+
 let reducer = (state = initialState, action) => {
   let newState = Object.assign({}, state)
   switch (action.type) {
@@ -85,6 +95,7 @@ let reducer = (state = initialState, action) => {
       newState.player = action.player
       newState.duration = action.duration
       newState.interval = action.interval
+      newState.env = action.env
       break
     case START_STOP:
       newState.playing = action.playing
@@ -101,6 +112,9 @@ let reducer = (state = initialState, action) => {
       break
     case TOGGLE_CHASE:
       newState.chase = action.chase
+      break
+    case SET_FLATS:
+      newState.flats = action.flats
       break
     default:
       return newState 

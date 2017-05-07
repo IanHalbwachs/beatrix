@@ -58,7 +58,7 @@ class SettingsModal extends Component {
           contentLabel="Example Modal"
         >
 
-          <div style={{textAlign: 'center'}} onClick={this.closeModal}>    
+          <div style={{textAlign: 'center'}}>    
             <h1 className="beatrix" style={{float: 'right'}}></h1>
             <p>Thanks for checking out Beatrix, an interactive sample manipulator by <a href="https://www.linkedin.com/in/ian-halbwachs">Ian Halbwachs</a>.</p>
             <p>Click the logo or hit the spacebar to start and stop playback.</p>
