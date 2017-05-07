@@ -10,7 +10,7 @@ let initialState = {
   playing: false,
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
-  chase: 'off',
+  chase: 'on',
   flats: 0,
   touched: false
 }
@@ -68,7 +68,10 @@ export function setClock(clock) {
 export function setFile(file) {
   return {
     type: SET_FILE,
-    file
+    file,
+    chase: 'on',
+    flats: 0,
+    selected: "0"
   }
 }
 
@@ -118,6 +121,9 @@ let reducer = (state = initialState, action) => {
       break
     case SET_FILE:
       newState.file = action.file
+      newState.chase = action.chase
+      newState.flats = action.flats
+      newState.selected = action.selected
       break
     case TOGGLE_CHASE:
       newState.chase = action.chase

@@ -2568,7 +2568,7 @@ var initialState = {
   playing: false,
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
-  chase: 'off',
+  chase: 'on',
   flats: 0,
   touched: false
 };
@@ -2626,7 +2626,10 @@ function setClock(clock) {
 function setFile(file) {
   return {
     type: SET_FILE,
-    file: file
+    file: file,
+    chase: 'on',
+    flats: 0,
+    selected: "0"
   };
 }
 
@@ -2679,6 +2682,9 @@ var reducer = function reducer() {
       break;
     case SET_FILE:
       newState.file = action.file;
+      newState.chase = action.chase;
+      newState.flats = action.flats;
+      newState.selected = action.selected;
       break;
     case TOGGLE_CHASE:
       newState.chase = action.chase;
@@ -21439,7 +21445,7 @@ var App = function (_Component) {
       var _this3 = this;
 
       var url = (typeof file === 'undefined' ? 'undefined' : _typeof(file)) === 'object' ? (0, _createObjectUrl2.default)(file) : file;
-      var env = new _tone2.default.ScaledEnvelope(0.001, 0, 1, 0.001);
+      var env = new _tone2.default.ScaledEnvelope(0.005, 0, 1, .005);
       env.min = 1;
       env.max = 0;
       var gain = new _tone2.default.Gain().toMaster();
@@ -21456,7 +21462,7 @@ var App = function (_Component) {
     value: function tick(time) {
       console.log('tick', time);
       var startPos = +this.props.selected * +this.props.interval;
-      this.props.env.triggerAttackRelease(0.0015, time - 0.001);
+      this.props.env.triggerAttackRelease(0.005, time - 0.005);
       this.props.player.start(time, startPos);
       var current = this.props.selected;
       var next = (+this.props.selected + 1) % 16 + '';
@@ -36759,12 +36765,29 @@ var Header = function (_Component) {
 
     _this.handleFlats = _this.handleFlats.bind(_this);
     _this.handleToggle = _this.handleToggle.bind(_this);
-
-    _this.toggleIcon = '>◼<';
     return _this;
   }
 
   _createClass(Header, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      switch (newProps.chase) {
+        case 'on':
+          this.toggleIcon = '>◼>';
+          break;
+        case 'off':
+          this.toggleIcon = '>◼<';
+          break;
+        case 'random':
+          this.toggleIcon = '>◼?';
+          break;
+        default:
+          this.toggleIcon = '>◼>';
+          break;
+      }
+      return;
+    }
+  }, {
     key: 'handleFlats',
     value: function handleFlats(direction) {
       var flats = this.props.flats;
@@ -36785,15 +36808,15 @@ var Header = function (_Component) {
       switch (this.props.chase) {
         case 'off':
           chase = 'on';
-          this.toggleIcon = '>◼>';
+          //this.toggleIcon = '>◼>'
           break;
         case 'on':
           chase = 'random';
-          this.toggleIcon = '>◼?';
+          //this.toggleIcon = '>◼?'
           break;
         case 'random':
           chase = 'off';
-          this.toggleIcon = '>◼<';
+          //this.toggleIcon = '>◼<'
           break;
       }
       this.props.toggleChase(chase);
@@ -36955,6 +36978,7 @@ var MatrixContainer = function (_Component) {
   }, {
     key: 'handleKeypress',
     value: function handleKeypress(e) {
+      if (!this.props.touched) return;
       var i = this.props.selected;
       var x = i % 4;
       var y = (i - x) / 4;
@@ -37035,7 +37059,8 @@ var mapStateToProps = function mapStateToProps(state) {
     interval: state.interval,
     playing: state.playing,
     player: state.player,
-    clock: state.clock
+    clock: state.clock,
+    touched: state.touched
   };
 };
 
@@ -37131,6 +37156,7 @@ var SettingsModal = function (_Component) {
   _createClass(SettingsModal, [{
     key: 'openModal',
     value: function openModal() {
+      this.props.stop();
       this.setState({ modalIsOpen: true });
     }
   }, {
@@ -37230,6 +37256,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     touch: function touch(touched) {
       return dispatch((0, _index.touch)(touched));
+    },
+    stop: function stop() {
+      return dispatch((0, _index.startStop)(false));
     }
   };
 };
