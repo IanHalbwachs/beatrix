@@ -9,7 +9,8 @@ let initialState = {
   selected: '0',
   playing: false,
   interval: null,
-  file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821"
+  file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
+  chase: false
 }
 
 const SELECT_CELL = 'SELECT_CELL'
@@ -18,6 +19,7 @@ const START_STOP = 'START_STOP'
 const TOCK = 'TOCK'
 const SET_CLOCK = 'SET_CLOCK'
 const SET_FILE = 'SET_FILE'
+const TOGGLE_CHASE = 'TOGGLE_CHASE'
 
 export function selectCell(selected){
   return {
@@ -65,6 +67,13 @@ export function setFile(file) {
   }
 }
 
+export function toggleChase(chase) {
+  return {
+    type: TOGGLE_CHASE,
+    chase
+  }
+}
+
 let reducer = (state = initialState, action) => {
   let newState = Object.assign({}, state)
   switch (action.type) {
@@ -89,6 +98,9 @@ let reducer = (state = initialState, action) => {
       break
     case SET_FILE:
       newState.file = action.file
+      break
+    case TOGGLE_CHASE:
+      newState.chase = action.chase
       break
     default:
       return newState 
