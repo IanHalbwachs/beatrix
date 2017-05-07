@@ -3001,7 +3001,7 @@ var initialState = {
   playing: false,
   interval: null,
   file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
-  chase: false,
+  chase: 'off',
   flats: 0,
   touched: false
 };
@@ -21464,7 +21464,14 @@ var App = function (_Component) {
       var current = this.props.selected;
       var next = (+this.props.selected + 1) % 16 + '';
       this.props.tock(current); // switch 2nd arg to next for chasing behavior
-      if (this.props.chase) this.props.selectCell(next);
+      if (this.props.chase === 'on') this.props.selectCell(next);
+      if (this.props.chase === 'random') {
+        if (Math.random() > 0.3) {
+          this.props.selectCell(Math.floor(Math.random() * 16));
+        } else {
+          this.props.selectCell(next);
+        }
+      }
     }
   }, {
     key: 'render',
@@ -36750,6 +36757,10 @@ var Header = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
 
     _this.handleFlats = _this.handleFlats.bind(_this);
+    _this.handleToggle = _this.handleToggle.bind(_this);
+
+    _this.toggleIcon = '>◼<';
+
     return _this;
   }
 
@@ -36766,6 +36777,30 @@ var Header = function (_Component) {
         return this.props.setFlats(flats + 1);
       }
       return;
+    }
+
+    //chaseIcon fn
+
+  }, {
+    key: 'handleToggle',
+    value: function handleToggle() {
+      var chase = void 0;
+      switch (this.props.chase) {
+        case 'off':
+          chase = 'on';
+          this.toggleIcon = '>◼>';
+          break;
+        case 'on':
+          chase = 'random';
+          this.toggleIcon = '>◼?';
+          break;
+        case 'random':
+          chase = 'off';
+          this.toggleIcon = '>◼<';
+          break;
+      }
+      console.log(chase, this.props.chase);
+      this.props.toggleChase(chase);
     }
   }, {
     key: 'render',
@@ -36795,22 +36830,20 @@ var Header = function (_Component) {
           _react2.default.createElement(
             'p',
             { className: 'control',
-              onClick: function onClick() {
-                return _this2.props.toggleChase(!_this2.props.chase);
-              } },
-            this.props.chase ? ">◼>" : ">◼<"
+              onClick: this.handleToggle },
+            this.toggleIcon
           ),
           _react2.default.createElement(Space, null),
           _react2.default.createElement(
             'p',
-            { className: 'control', onClick: function onClick() {
+            { className: 'control', style: { fontSize: '30px' }, onClick: function onClick() {
                 return _this2.handleFlats('down');
               } },
             '\u2B07'
           ),
           _react2.default.createElement(
             'p',
-            { className: 'control', onClick: function onClick() {
+            { className: 'control', style: { fontSize: '30px' }, onClick: function onClick() {
                 return _this2.handleFlats('up');
               } },
             '\u2B06'

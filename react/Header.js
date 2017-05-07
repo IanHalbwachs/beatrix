@@ -11,6 +11,10 @@ class Header extends Component {
   constructor() {
     super()
     this.handleFlats = this.handleFlats.bind(this)
+    this.handleToggle = this.handleToggle.bind(this)
+    
+    this.toggleIcon = '>◼<'
+    
   }
 
   handleFlats(direction) {
@@ -24,6 +28,28 @@ class Header extends Component {
       return this.props.setFlats(flats+1)
     }
     return
+  }
+
+  //chaseIcon fn
+
+  handleToggle() {
+    let chase
+    switch (this.props.chase) {
+      case 'off':
+        chase = 'on'
+        this.toggleIcon = '>◼>'
+        break
+      case 'on':
+        chase = 'random'
+        this.toggleIcon = '>◼?'
+        break      
+      case 'random':
+        chase = 'off'
+        this.toggleIcon = '>◼<'
+        break
+    }
+    console.log(chase, this.props.chase)
+    this.props.toggleChase(chase)
   }
 
   
@@ -40,12 +66,12 @@ class Header extends Component {
           </p>
           <Space/>        
           <p className="control" 
-            onClick={()=> this.props.toggleChase(!this.props.chase)}>
-            {this.props.chase ? ">◼>" : ">◼<"}
+            onClick={this.handleToggle}>
+            {this.toggleIcon}
           </p>
           <Space/> 
-          <p className="control" onClick={()=> this.handleFlats('down')}>⬇</p>
-          <p className="control" onClick={()=> this.handleFlats('up')}>⬆</p>
+          <p className="control" style={{fontSize: '30px'}} onClick={()=> this.handleFlats('down')}>⬇</p>
+          <p className="control" style={{fontSize: '30px'}} onClick={()=> this.handleFlats('up')}>⬆</p>
           <p className="control">♭{this.props.flats}</p>
         </div>
     </div>
