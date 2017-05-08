@@ -21464,10 +21464,10 @@ var App = function (_Component) {
     value: function tick(time) {
       console.log('tick', time);
       var startPos = +this.props.selected * +this.props.interval;
-      this.props.env.triggerAttackRelease(0.005, time - 0.005);
-      this.props.player.start(time, startPos);
       var current = this.props.selected;
       var next = (+this.props.selected + 1) % 16 + '';
+      this.props.env.triggerAttackRelease(0.005, time - 0.005);
+      this.props.player.start(time, startPos);
       this.props.tock(current); // switch 2nd arg to next for chasing behavior
       if (this.props.chase === 'on') this.props.selectCell(next);
       if (this.props.chase === 'random') {

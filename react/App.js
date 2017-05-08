@@ -56,10 +56,10 @@ class App extends Component {
   tick(time) {
     console.log('tick', time)
     let startPos = +this.props.selected * +this.props.interval
-    this.props.env.triggerAttackRelease(0.005, time-0.005)
-    this.props.player.start(time, startPos)
     let current = this.props.selected
     let next = (+this.props.selected + 1)%16 +''
+    this.props.env.triggerAttackRelease(0.005, time-0.005)
+    this.props.player.start(time, startPos)
     this.props.tock(current) // switch 2nd arg to next for chasing behavior
     if (this.props.chase === 'on') this.props.selectCell(next)
     if (this.props.chase === 'random') {
