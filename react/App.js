@@ -46,6 +46,8 @@ class App extends Component {
     let newBuffer = new Tone.Buffer(url, () => {
         let newPlayer = new Tone.Player(url, ()=> {
             this.props.setBuffer(newBuffer, newPlayer, env)
+            this.props.startStop(true)
+            setTimeout(this.props.startStop, 10, false)
         }).connect(gain) // should be able to pass buffer in to player per docs but is no work
       newPlayer.loop = true
     })
