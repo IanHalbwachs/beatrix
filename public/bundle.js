@@ -21295,7 +21295,7 @@ var FileSelector = function (_Component) {
         { id: 'file-selector' },
         _react2.default.createElement(
           'label',
-          { style: { color: 'cornflowerblue' } },
+          { style: { color: 'cornflowerblue', cursor: 'pointer' } },
           'load your own',
           _react2.default.createElement('input', { type: 'file', style: { display: 'none' }, id: 'input', onChange: this.handleFile })
         )
@@ -37127,11 +37127,13 @@ var customStyles = {
   content: {
     top: '25%',
     left: '25%',
-    marginRight: '-25%',
-    transform: 'translate(-25%, -10%)',
-    backgroundColor: 'rgba(255, 255, 255, .8)',
-    lineHeight: '50px',
-    fontSize: '30px'
+    marginRight: '0%',
+    transform: 'translate(-15%, -10%)',
+    backgroundColor: 'rgba(255, 255, 255, .9)',
+    lineHeight: '40px',
+    fontSize: '30px',
+    userSelect: 'none',
+    cursor: 'default'
   }
 };
 
@@ -37196,12 +37198,12 @@ var SettingsModal = function (_Component) {
           },
           _react2.default.createElement(
             'div',
-            { style: { textAlign: 'center' } },
+            { style: { textAlign: 'left' } },
             _react2.default.createElement('h1', { className: 'beatrix', style: { float: 'right' } }),
             _react2.default.createElement(
               'p',
               null,
-              'Thanks for checking out Beatrix, an interactive sample manipulator by ',
+              'Beatrix is an interactive sample manipulator by ',
               _react2.default.createElement(
                 'a',
                 { href: 'https://www.linkedin.com/in/ian-halbwachs' },
@@ -37212,6 +37214,14 @@ var SettingsModal = function (_Component) {
             _react2.default.createElement(
               'p',
               null,
+              'Play with the example file or ',
+              _react2.default.createElement(_FileSelector2.default, { close: this.closeModal }),
+              '!'
+            ),
+            _react2.default.createElement('br', null),
+            _react2.default.createElement(
+              'p',
+              null,
               'Click the logo or hit the spacebar to start and stop playback.'
             ),
             _react2.default.createElement(
@@ -37219,13 +37229,18 @@ var SettingsModal = function (_Component) {
               null,
               'Use your mouse or arrow keys to navigate the cells.'
             ),
+            _react2.default.createElement('br', null),
             _react2.default.createElement(
               'p',
               null,
-              'Play with the example file or ',
-              _react2.default.createElement(_FileSelector2.default, { close: this.closeModal }),
-              '!'
+              '>\u25FC> controls chase behavior (auto / random / manual) '
             ),
+            _react2.default.createElement(
+              'p',
+              null,
+              '\u266D controls the buffer rate (tempo remains constant)'
+            ),
+            _react2.default.createElement('br', null),
             _react2.default.createElement(
               'p',
               null,

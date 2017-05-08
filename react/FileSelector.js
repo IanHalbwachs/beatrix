@@ -18,7 +18,7 @@ class FileSelector extends Component {
   render() {
     return (
       <span id="file-selector">
-        <label style={{color: 'cornflowerblue'}}>load your own<input type="file" style={{display: 'none'}} id="input" onChange={this.handleFile}/></label>
+        <label style={{color: 'cornflowerblue', cursor: 'pointer'}}>load your own<input type="file" style={{display: 'none'}} id="input" onChange={this.handleFile}/></label>
       </span>
     )
   }
