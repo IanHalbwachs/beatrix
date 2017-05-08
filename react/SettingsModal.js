@@ -39,7 +39,7 @@ class SettingsModal extends Component {
   }
 
   openModal() {
-    this.props.stop()
+    this.props.startStop(false)
     this.setState({modalIsOpen: true})
   }
 
@@ -100,7 +100,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     touch: (touched) => dispatch(touch(touched)),
-    stop: ()=> dispatch(startStop(false))
+    startStop: (bool)=> dispatch(startStop(bool))
   }
 }
 

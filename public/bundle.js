@@ -21453,6 +21453,8 @@ var App = function (_Component) {
       var newBuffer = new _tone2.default.Buffer(url, function () {
         var newPlayer = new _tone2.default.Player(url, function () {
           _this3.props.setBuffer(newBuffer, newPlayer, env);
+          _this3.props.startStop(true);
+          setTimeout(_this3.props.startStop, 10, false);
         }).connect(gain); // should be able to pass buffer in to player per docs but is no work
         newPlayer.loop = true;
       });
@@ -37158,7 +37160,7 @@ var SettingsModal = function (_Component) {
   _createClass(SettingsModal, [{
     key: 'openModal',
     value: function openModal() {
-      this.props.stop();
+      this.props.startStop(false);
       this.setState({ modalIsOpen: true });
     }
   }, {
@@ -37272,8 +37274,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     touch: function touch(touched) {
       return dispatch((0, _index.touch)(touched));
     },
-    stop: function stop() {
-      return dispatch((0, _index.startStop)(false));
+    startStop: function startStop(bool) {
+      return dispatch((0, _index.startStop)(bool));
     }
   };
 };
