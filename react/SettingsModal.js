@@ -14,11 +14,13 @@ const customStyles = {
   content : {
     top: '25%',
     left: '25%',
-    marginRight: '-25%',
-    transform: 'translate(-25%, -10%)',
-    backgroundColor: 'rgba(255, 255, 255, .8)',
-    lineHeight: '50px',
-    fontSize: '30px'
+    marginRight: '0%',
+    transform: 'translate(-15%, -10%)',
+    backgroundColor: 'rgba(255, 255, 255, .9)',
+    lineHeight: '40px',
+    fontSize: '30px',
+    userSelect: 'none',
+    cursor: 'default'
   }
 };
 
@@ -54,11 +56,6 @@ class SettingsModal extends Component {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       Tone.setContext(context)
-      let silence = new Tone.Noise
-      silence.mute = true
-      silence.connect(Tone.Master)
-      silence.start() 
-      silence.stop()
       this.props.touch(true)
   }
 
@@ -74,12 +71,17 @@ class SettingsModal extends Component {
           contentLabel="Example Modal"
         >
 
-          <div style={{textAlign: 'center'}}>    
+          <div style={{textAlign: 'left'}}>    
             <h1 className="beatrix" style={{float: 'right'}}></h1>
-            <p>Thanks for checking out Beatrix, an interactive sample manipulator by <a href="https://www.linkedin.com/in/ian-halbwachs">Ian Halbwachs</a>.</p>
+            <p>Beatrix is an interactive sample manipulator by <a href="https://www.linkedin.com/in/ian-halbwachs">Ian Halbwachs</a>.</p>
+            <p>Play with the example file or <FileSelector close={this.closeModal}/>!</p>
+            <br/>
             <p>Click the logo or hit the spacebar to start and stop playback.</p>
             <p>Use your mouse or arrow keys to navigate the cells.</p>
-            <p>Play with the example file or <FileSelector close={this.closeModal}/>!</p>
+            <br/>
+            <p>>◼> controls chase behavior (auto / random / manual) </p>
+            <p>♭ controls the buffer rate (tempo remains constant)</p>
+            <br/>
             <p>Take a look <a href="https://glitch.com/edit/#!/beatrix">under the hood</a>.</p>
           </div>
           
