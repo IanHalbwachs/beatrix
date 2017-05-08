@@ -37176,6 +37176,11 @@ var SettingsModal = function (_Component) {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       _tone2.default.setContext(context);
+      var silence = new _tone2.default.Noise();
+      silence.mute = true;
+      silence.connect(_tone2.default.Master);
+      silence.start();
+      silence.stop();
       this.props.touch(true);
     }
   }, {

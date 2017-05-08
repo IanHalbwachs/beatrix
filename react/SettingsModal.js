@@ -54,6 +54,11 @@ class SettingsModal extends Component {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       Tone.setContext(context)
+      let silence = new Tone.Noise
+      silence.mute = true
+      silence.connect(Tone.Master)
+      silence.start() 
+      silence.stop()
       this.props.touch(true)
   }
 
