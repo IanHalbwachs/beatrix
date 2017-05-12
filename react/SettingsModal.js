@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import Modal from 'react-modal';
-import { touch, startStop } from './index.js'
+import { touch, startStop, setFile } from './index.js'
 import FileSelector from './FileSelector'
 import Tone from 'tone'
 
@@ -50,6 +50,7 @@ class SettingsModal extends Component {
   closeModal() {
     this.setState({modalIsOpen: false})
     if (!this.props.touched) this.iosAudioContext()
+    if (!this.props.file) this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
   }
   
   iosAudioContext() {
@@ -93,14 +94,16 @@ class SettingsModal extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    touched: state.touched
+    touched: state.touched,
+    file: state.file
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     touch: (touched) => dispatch(touch(touched)),
-    startStop: (bool)=> dispatch(startStop(bool))
+    startStop: (bool)=> dispatch(startStop(bool)),
+    setFile: (file) => dispatch(setFile(file))
   }
 }
 

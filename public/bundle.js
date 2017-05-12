@@ -2567,7 +2567,7 @@ var initialState = {
   selected: '0',
   playing: false,
   interval: null,
-  file: "https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821",
+  file: null,
   chase: 'on',
   flats: 0,
   touched: false
@@ -21416,7 +21416,7 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      this.loadFile(this.props.file);
+      //this.loadFile(this.props.file)
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -37173,6 +37173,7 @@ var SettingsModal = function (_Component) {
     value: function closeModal() {
       this.setState({ modalIsOpen: false });
       if (!this.props.touched) this.iosAudioContext();
+      if (!this.props.file) this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821");
     }
   }, {
     key: 'iosAudioContext',
@@ -37265,7 +37266,8 @@ var SettingsModal = function (_Component) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    touched: state.touched
+    touched: state.touched,
+    file: state.file
   };
 };
 
@@ -37276,6 +37278,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     startStop: function startStop(bool) {
       return dispatch((0, _index.startStop)(bool));
+    },
+    setFile: function setFile(file) {
+      return dispatch((0, _index.setFile)(file));
     }
   };
 };
