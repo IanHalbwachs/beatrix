@@ -16,7 +16,7 @@ class App extends Component {
   }
   
   componentWillMount() {
-    this.loadFile(this.props.file)
+    //this.loadFile(this.props.file)
   }
   
   componentWillReceiveProps(newProps) {
