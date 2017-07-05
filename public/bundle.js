@@ -21453,8 +21453,8 @@ var App = function (_Component) {
       var newBuffer = new _tone2.default.Buffer(url, function () {
         var newPlayer = new _tone2.default.Player(url, function () {
           _this3.props.setBuffer(newBuffer, newPlayer, env);
-          _this3.props.startStop(true);
-          setTimeout(_this3.props.startStop, 10, false);
+          //this.props.startStop(true)
+          //setTimeout(this.props.startStop, 10, false)
         }).connect(gain); // should be able to pass buffer in to player per docs but is no work
         newPlayer.loop = true;
       });
@@ -36969,10 +36969,11 @@ var MatrixContainer = function (_Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(newProps) {
+      console.log(newProps, this.props);
       if (newProps.playing) {
         newProps.clock.start();
       }
-      if (!newProps.playing) {
+      if (!newProps.playing && newProps.player) {
         newProps.player.stop();
         newProps.clock.stop();
       }
@@ -37062,7 +37063,8 @@ var mapStateToProps = function mapStateToProps(state) {
     playing: state.playing,
     player: state.player,
     clock: state.clock,
-    touched: state.touched
+    touched: state.touched,
+    file: state.file
   };
 };
 
@@ -37173,7 +37175,7 @@ var SettingsModal = function (_Component) {
     value: function closeModal() {
       this.setState({ modalIsOpen: false });
       if (!this.props.touched) this.iosAudioContext();
-      if (!this.props.file) this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821");
+      //if (!this.props.file) this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
     }
   }, {
     key: 'iosAudioContext',
@@ -37181,6 +37183,7 @@ var SettingsModal = function (_Component) {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       _tone2.default.setContext(context);
+      this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821");
       this.props.touch(true);
     }
   }, {
