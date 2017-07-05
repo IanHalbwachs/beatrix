@@ -14,10 +14,6 @@ class App extends Component {
     this.loadFile = this.loadFile.bind(this);
   }
 
-  componentWillMount() {
-    //this.loadFile(this.props.file)
-  }
-
   componentWillReceiveProps(newProps) {
     if (newProps.interval !== this.props.interval ) {
       let clock = new Tone.Clock((time) => {
@@ -59,7 +55,7 @@ class App extends Component {
     let next = (+this.props.selected + 1) % 16 + '';
     this.props.env.triggerAttackRelease(0.005, time - 0.005);
     this.props.player.start(time, startPos);
-    this.props.tock(current); // switch 2nd arg to next for chasing behavior
+    this.props.tock(current);
     if (this.props.chase === 'on') this.props.selectCell(next);
     if (this.props.chase === 'random') {
       if (Math.random() < 0.4) {

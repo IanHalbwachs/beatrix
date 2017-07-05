@@ -24,7 +24,13 @@ class Tempo extends Component {
 
   render() {
     return (
-     <p className="control"><span style={{fontSize: '25px'}}>BPM</span> {this.tempo}</p>
+     <p
+      onClick={this.props.handleModeToggle}
+      className="control">
+        <span style={{fontSize: '25px'}}>BPM</span>
+        {this.tempo ? ` ${this.tempo}` : null}
+        <span style={{fontSize: '25px'}}>{this.props.modeIcon}</span>
+      </p>
     );
   }
 }

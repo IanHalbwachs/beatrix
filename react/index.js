@@ -12,7 +12,8 @@ let initialState = {
   file: null,
   chase: 'on',
   flats: 0,
-  touched: false
+  touched: false,
+  mode: 'normal'
 };
 
 const SELECT_CELL = 'SELECT_CELL';
@@ -24,6 +25,7 @@ const SET_FILE = 'SET_FILE';
 const TOGGLE_CHASE = 'TOGGLE_CHASE';
 const SET_FLATS = 'SET_FLATS';
 const TOUCH = 'TOUCH';
+const TOGGLE_MODE = 'TOGGLE_MODE'
 
 export function selectCell(selected){
   return {
@@ -96,6 +98,13 @@ export function touch(bool) {
   };
 }
 
+export function toggleMode(mode) {
+  return {
+    type: TOGGLE_MODE,
+    mode
+  };
+}
+
 let reducer = (state = initialState, action) => {
   let newState = Object.assign({}, state);
   switch (action.type) {
@@ -133,6 +142,9 @@ let reducer = (state = initialState, action) => {
       break;
     case TOUCH:
       newState.touched = action.touched;
+      break;
+    case TOGGLE_MODE:
+      newState.mode = action.mode;
       break;
     default:
       return newState;
