@@ -18,10 +18,11 @@ class MatrixContainer extends Component {
   }
   
   componentWillReceiveProps(newProps) {
+    console.log(newProps, this.props)
     if (newProps.playing) {
       newProps.clock.start()
     }
-    if (!newProps.playing) {
+    if (!newProps.playing && newProps.player) {
       newProps.player.stop()
       newProps.clock.stop()
     }
@@ -93,7 +94,8 @@ const mapStateToProps = (state) => {
     playing: state.playing,
     player: state.player,
     clock: state.clock,
-    touched: state.touched
+    touched: state.touched,
+    file: state.file
   }
 }
 

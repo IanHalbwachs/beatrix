@@ -50,13 +50,14 @@ class SettingsModal extends Component {
   closeModal() {
     this.setState({modalIsOpen: false})
     if (!this.props.touched) this.iosAudioContext()
-    if (!this.props.file) this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
+    //if (!this.props.file) this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
   }
   
   iosAudioContext() {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       Tone.setContext(context)
+      this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
       this.props.touch(true)
   }
 
