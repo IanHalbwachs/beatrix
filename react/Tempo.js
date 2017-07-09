@@ -3,10 +3,6 @@ import { connect } from 'react-redux';
 
 class Tempo extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   componentWillReceiveProps (newProps) {
     this.tempo = 60 / newProps.interval;
     if (this.tempo < 72) {

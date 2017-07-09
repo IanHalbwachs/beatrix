@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { selectCell } from './index.js';
 import drawBuffer from 'draw-wave';
-import Tone from 'tone';
 
 class Cell extends Component {
 
@@ -17,27 +16,26 @@ class Cell extends Component {
   }
 
   componentWillReceiveProps (newProps) {
-    let id = +this.props.id;
+    const id = +this.props.id;
     if (newProps.buffer !== this.props.buffer) {
-      let cellSlice = [newProps.interval * id, newProps.interval * (id + 1)];
-      let cellBuffer = newProps.buffer.slice(...cellSlice);
+      const cellSlice = [newProps.interval * id, newProps.interval * (id + 1)];
+      const cellBuffer = newProps.buffer.slice(...cellSlice);
       this.setState({
         cellBuffer
       });
-      let cellCanvas = document.querySelector(`#canvas-${this.props.id}`);
+      const cellCanvas = document.querySelector(`#canvas-${this.props.id}`);
       cellCanvas.getContext('2d').clearRect(0, 0, cellCanvas.width, cellCanvas.height);
       drawBuffer.canvas(cellCanvas, cellBuffer, 'lightyellow');
     }
   }
 
   render() {
-    let selected = this.props.selected;
-    let activeCell = this.props.activeCell;
-    let buffer = this.props.buffer;
-    let id = this.props.id;
-    let interval = this.props.interval;
-    let animationStyle = {animationDuration: interval + 's' };
-    let width = {width: 100 * Math.pow(2, this.props.flats / 12) + '%'};
+    const selected = this.props.selected;
+    const activeCell = this.props.activeCell;
+    const id = this.props.id;
+    const interval = this.props.interval;
+    const animationStyle = {animationDuration: interval + 's' };
+    const width = {width: 100 * Math.pow(2, this.props.flats / 12) + '%'};
     return (
      <p className="cell" id={id} data-selected={selected === id} data-active={activeCell === id} style={animationStyle} onClick={this.handleClick}>
         <canvas id={'canvas-' + id} style={width} />

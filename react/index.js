@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import { devToolsEnhancer } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 
-let initialState = {
+const initialState = {
   selected: '0',
   playing: false,
   interval: null,
@@ -13,7 +13,8 @@ let initialState = {
   chase: 'on',
   flats: 0,
   touched: false,
-  mode: 'normal'
+  mode: 'normal',
+  ratio: 1
 };
 
 const SELECT_CELL = 'SELECT_CELL';
@@ -25,7 +26,7 @@ const SET_FILE = 'SET_FILE';
 const TOGGLE_CHASE = 'TOGGLE_CHASE';
 const SET_FLATS = 'SET_FLATS';
 const TOUCH = 'TOUCH';
-const TOGGLE_MODE = 'TOGGLE_MODE'
+const TOGGLE_MODE = 'TOGGLE_MODE';
 
 export function selectCell(selected){
   return {
@@ -34,14 +35,13 @@ export function selectCell(selected){
   };
 }
 
-export function setBuffer(buffer, player, env) {
+export function setBuffer(buffer, player, env, interval) {
   return {
     type: SET_BUFFER,
     buffer,
     player,
     env,
-    duration: buffer.duration,
-    interval: buffer.duration / 16
+    interval
   };
 }
 
@@ -73,7 +73,8 @@ export function setFile(file) {
     file,
     chase: 'on',
     flats: 0,
-    selected: '0'
+    selected: '0',
+    mode: 'normal'
   };
 }
 
@@ -105,8 +106,8 @@ export function toggleMode(mode) {
   };
 }
 
-let reducer = (state = initialState, action) => {
-  let newState = Object.assign({}, state);
+const reducer = (state = initialState, action) => {
+  const newState = Object.assign({}, state);
   switch (action.type) {
     case SELECT_CELL:
       newState.selected = action.selected;
@@ -114,7 +115,6 @@ let reducer = (state = initialState, action) => {
     case SET_BUFFER:
       newState.buffer = action.buffer;
       newState.player = action.player;
-      newState.duration = action.duration;
       newState.interval = action.interval;
       newState.env = action.env;
       break;
@@ -154,7 +154,7 @@ let reducer = (state = initialState, action) => {
   return newState;
 };
 
-let store = createStore(reducer, initialState, devToolsEnhancer());
+const store = createStore(reducer, initialState, devToolsEnhancer());
 
 render(
   <Provider store={store}>

@@ -14,6 +14,8 @@ class Header extends Component {
     this.handleFlats = this.handleFlats.bind(this);
     this.handleChaseToggle = this.handleChaseToggle.bind(this);
     this.handleModeToggle = this.handleModeToggle.bind(this);
+    this.chaseIcon = '>◼>';
+    this.modeIcon = '';
   }
 
   componentWillReceiveProps (newProps) {
@@ -112,10 +114,26 @@ class Header extends Component {
             {this.chaseIcon}
           </p>
           <Space />
-          <p className="control" style={{fontSize: '30px'}} onClick={() => this.handleFlats('down')}>⬇</p>
-          <p className="control" style={{fontSize: '30px'}} onClick={() => this.handleFlats('up')}>⬆</p>
-          <p className="control" style={{width: '10%'}}>♭{this.props.flats}</p>
-            <Tempo handleModeToggle={this.handleModeToggle} modeIcon={this.modeIcon}/>
+          <p
+            className="control"
+            style={{fontSize: '30px'}}
+            onClick={() => this.handleFlats('down')}>
+            ⬇
+          </p>
+          <p
+            className="control"
+            style={{fontSize: '30px'}}
+            onClick={() => this.handleFlats('up')}>
+            ⬆
+          </p>
+          <p
+            className="control"
+            style={{width: '10%'}}>
+            ♭{this.props.flats}
+          </p>
+            <Tempo
+              handleModeToggle={this.handleModeToggle}
+              modeIcon={this.modeIcon} />
         </div>
     </div>
     );

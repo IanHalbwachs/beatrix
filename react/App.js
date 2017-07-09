@@ -16,7 +16,7 @@ class App extends Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.interval !== this.props.interval ) {
-      let clock = new Tone.Clock((time) => {
+      const clock = new Tone.Clock((time) => {
         if (clock.ticks > 0) { // ignore glitchy 1st tick
           this.tick(time);
         }
@@ -29,18 +29,22 @@ class App extends Component {
     if (newProps.flats !== this.props.flats) {
       this.props.player.playbackRate = 1 / Math.pow(2, newProps.flats / 12);
     }
+    // if (newProps.mode === 'delta') {
+    //   this.props.player.playbackRate = 1;
+    //   this.props.interval = 1 / Math.pow(2, newProps.flats / 12);
+    // }
   }
 
   loadFile(file) {
-    let url = typeof file === 'object' ? createObjectUrl(file) : file;
-    let env = new Tone.ScaledEnvelope(0.005, 0, 1, 0.005);
+    const url = typeof file === 'object' ? createObjectUrl(file) : file;
+    const env = new Tone.ScaledEnvelope(0.005, 0, 1, 0.005);
     env.min = 1;
     env.max = 0;
-    let gain = new Tone.Gain().toMaster();
+    const gain = new Tone.Gain().toMaster();
     env.connect(gain.gain);
-    let newBuffer = new Tone.Buffer(url, () => {
-        let newPlayer = new Tone.Player(url, () => {
-            this.props.setBuffer(newBuffer, newPlayer, env);
+    const newBuffer = new Tone.Buffer(url, () => {
+        const newPlayer = new Tone.Player(url, () => {
+            this.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
             //this.props.startStop(true)
             //setTimeout(this.props.startStop, 10, false)
         }).connect(gain); // should be able to pass buffer in to player per docs but is no work
@@ -50,9 +54,9 @@ class App extends Component {
 
   tick(time) {
     console.log('tick', time);
-    let startPos = +this.props.selected * +this.props.interval;
-    let current = this.props.selected;
-    let next = (+this.props.selected + 1) % 16 + '';
+    const startPos = +this.props.selected * +this.props.interval;
+    const current = this.props.selected;
+    const next = (+this.props.selected + 1) % 16 + '';
     this.props.env.triggerAttackRelease(0.005, time - 0.005);
     this.props.player.start(time, startPos);
     this.props.tock(current);
@@ -68,7 +72,7 @@ class App extends Component {
   }
 
   render() {
-    let animationStyle = {animationDuration: this.props.interval * 4 + 's' };
+    const animationStyle = {animationDuration: this.props.interval * 4 + 's' };
 
     return (
       <div className="App" id="app" data-playing={this.props.playing} style={animationStyle}>
@@ -90,13 +94,14 @@ const mapStateToProps = (state) => {
     file: state.file,
     chase: state.chase,
     flats: state.flats,
-    touched: state.touched
+    touched: state.touched,
+    mode: state.mode
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setBuffer: (buffer, player, env) => dispatch(setBuffer(buffer, player, env)),
+    setBuffer: (buffer, player, env, interval) => dispatch(setBuffer(buffer, player, env, interval)),
     startStop: (playing) => dispatch(startStop(playing)),
     setClock: (clock) => dispatch(setClock(clock)),
     tock: (current) => dispatch(tock(current)),

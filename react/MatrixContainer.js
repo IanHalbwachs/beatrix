@@ -29,9 +29,9 @@ class MatrixContainer extends Component {
 
   handleKeypress(e) {
     if (!this.props.touched) return;
-    let i = this.props.selected;
-    let x = i % 4;
-    let y = (i - x) / 4;
+    const i = this.props.selected;
+    const x = i % 4;
+    const y = (i - x) / 4;
     switch (e.keyCode) {
       case 32: //spacebar
         e.preventDefault();
