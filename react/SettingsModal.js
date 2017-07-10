@@ -88,6 +88,11 @@ class SettingsModal extends Component {
       this.props.touch(true);
   }
 
+  handleClick() {
+    console.log('iosAusioClock')
+    this.iosAudioContext();
+  }
+
   render() {
     return (
       <div className="beatrix modal" onClick={this.openModal}>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setFile, touch } from './index.js';
+import Tone from 'tone'
 
 class FileSelector extends Component {
 
@@ -11,7 +12,16 @@ class FileSelector extends Component {
 
   handleFile(e) {
     this.props.setFile(e.target.files[0]);
+    this.iosAudioContext()
     setTimeout(() => this.props.close(), 50);
+  }
+
+  iosAudioContext() {
+    console.log('iosAudiContext!!')
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      const context = new window.AudioContext();
+      Tone.setContext(context);
+      this.props.touch(true);
   }
 
   render() {

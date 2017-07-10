@@ -35293,6 +35293,12 @@ var SettingsModal = function (_Component) {
       this.props.touch(true);
     }
   }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      console.log('iosAusioClock');
+      this.iosAudioContext();
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this4 = this;
@@ -35439,6 +35445,10 @@ var _reactRedux = __webpack_require__(15);
 
 var _index = __webpack_require__(16);
 
+var _tone = __webpack_require__(98);
+
+var _tone2 = _interopRequireDefault(_tone);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35465,9 +35475,19 @@ var FileSelector = function (_Component) {
       var _this2 = this;
 
       this.props.setFile(e.target.files[0]);
+      this.iosAudioContext();
       setTimeout(function () {
         return _this2.props.close();
       }, 50);
+    }
+  }, {
+    key: 'iosAudioContext',
+    value: function iosAudioContext() {
+      console.log('iosAudiContext!!');
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      var context = new window.AudioContext();
+      _tone2.default.setContext(context);
+      this.props.touch(true);
     }
   }, {
     key: 'render',
