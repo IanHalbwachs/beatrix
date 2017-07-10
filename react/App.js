@@ -23,7 +23,7 @@ class App extends Component {
       }, 1 / newProps.interval);
       this.props.setClock(clock);
     }
-    if (newProps.file !== this.props.file) {
+    if (newProps.file !== this.props.file || newProps.touched !== this.props.touched) {
       this.loadFile(newProps.file);
     }
     if (newProps.flats !== this.props.flats) {

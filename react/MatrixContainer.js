@@ -17,11 +17,13 @@ class MatrixContainer extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log(newProps, this.props);
+    console.log('matrixContainer newProps/props', newProps, this.props);
     if (newProps.playing) {
+      console.log('starting clock??')
       newProps.clock.start();
     }
     if (!newProps.playing && newProps.player) {
+      console.log('stopping clock??')
       newProps.player.stop();
       newProps.clock.stop();
     }

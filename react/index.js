@@ -68,6 +68,7 @@ export function setClock(clock) {
 }
 
 export function setFile(file) {
+
   return {
     type: SET_FILE,
     file,
