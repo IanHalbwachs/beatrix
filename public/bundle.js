@@ -35254,7 +35254,10 @@ var SettingsModal = function (_Component) {
     value: function closeModal() {
       console.log('closeModal!! file?', this.props.file);
       if (!this.props.file) {
-        console.log('closeModal!! !this.props.file??', !this.props.file);
+        console.log('iosAudioContext!! !this.props.file?', !this.props.file);
+        this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821");
+      }
+      if (!this.props.touched) {
         this.iosAudioContext();
       }
       this.setState({ modalIsOpen: false });
@@ -35266,10 +35269,6 @@ var SettingsModal = function (_Component) {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       _tone2.default.setContext(context);
-      if (!this.props.touched) {
-        console.log('iosAudioContext!! !this.props.file?', !this.props.file);
-        this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821");
-      }
       this.props.touch(true);
     }
   }, {
