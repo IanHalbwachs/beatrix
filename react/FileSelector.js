@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { store, setFile } from './index.js';
+import { setFile } from './index.js';
 
 class FileSelector extends Component {
 
