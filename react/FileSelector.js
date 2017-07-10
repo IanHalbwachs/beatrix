@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setFile } from './index.js';
+import { setFile, touch } from './index.js';
 
 class FileSelector extends Component {
 
@@ -10,9 +10,9 @@ class FileSelector extends Component {
   }
 
   handleFile(e) {
-    console.log(e.target.files[0]);
+    this.props.touch();
     this.props.setFile(e.target.files[0]);
-    this.props.close();
+    setTimeout(() => this.props.close(), 50);
   }
 
   render() {
@@ -27,7 +27,8 @@ class FileSelector extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return  {
-    setFile: (file) => dispatch(setFile(file))
+    setFile: (file) => dispatch(setFile(file)),
+    touch: () => dispatch(touch(true))
   };
 };
 

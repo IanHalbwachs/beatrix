@@ -48,24 +48,24 @@ class SettingsModal extends Component {
   }
 
   closeModal() {
-    console.log('file?', this.props.file);
+    console.log('closeModal!! file?', this.props.file);
     if (!this.props.file) {
-      console.log('trueing??')
-      this.iosAudioContext(true);
+      console.log('closeModal!! !this.props.file??', !this.props.file)
+      this.iosAudioContext();
     }
     this.setState({modalIsOpen: false});
   }
 
-  iosAudioContext(bool) {
-    console.log('touched ', this.props.touched, 'file', this.props.file)
+  iosAudioContext() {
+    console.log('iosAudiContext!! touched ', this.props.touched, 'file', this.props.file)
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       const context = new window.AudioContext();
       Tone.setContext(context);
-      this.props.touch(true);
-      if (this.props.file) {
-        console.log('booling??', bool, 'well??')
+      if (!this.props.touched) {
+        console.log('iosAudioContext!! !this.props.file?', !this.props.file)
         this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
       }
+      this.props.touch(true);
   }
 
   render() {
@@ -83,7 +83,7 @@ class SettingsModal extends Component {
           <div style={{textAlign: 'left'}}>
             <h1 className="beatrix" style={{float: 'right'}} />
             <p>Beatrix is an interactive sample manipulator by <a href="https://www.linkedin.com/in/ian-halbwachs">Ian Halbwachs</a>.</p>
-            <p>Play with the example file or <a onClick={() => this.iosAudioContext.bind(this)}><FileSelector close={this.closeModal} /></a>!</p>
+            <p>Play with the example file or <a onClick={() => this.iosAudioContext.bind(this)}><FileSelector ios={() => this.iosAudioContext.bind(this)} close={this.closeModal} /></a>!</p>
             <br />
             <p>Click the logo or hit the spacebar to start and stop playback.</p>
             <p>Use your mouse or arrow keys to navigate the cells.</p>
