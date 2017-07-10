@@ -10,7 +10,6 @@ class FileSelector extends Component {
   }
 
   handleFile(e) {
-    this.props.touch();
     this.props.setFile(e.target.files[0]);
     setTimeout(() => this.props.close(), 50);
   }

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
-import { touch, startStop, setFile } from './index.js';
+import { touch, startStop, setFile, setBuffer } from './index.js';
 import FileSelector from './FileSelector';
 import Tone from 'tone';
+import createObjectUrl from 'create-object-url';
+
 
 const appElement = document.getElementById('hamburger');
 
@@ -56,7 +58,25 @@ class SettingsModal extends Component {
     if (!this.props.touched) {
       this.iosAudioContext();
     }
+    setTimeout(() => this.loadFile(this.props.file), 50);
     this.setState({modalIsOpen: false});
+  }
+
+  loadFile(file) {
+    const url = typeof file === 'object' ? createObjectUrl(file) : file;
+    const env = new Tone.ScaledEnvelope(0.005, 0, 1, 0.005);
+    env.min = 1;
+    env.max = 0;
+    const gain = new Tone.Gain().toMaster();
+    env.connect(gain.gain);
+    const newBuffer = new Tone.Buffer(url, () => {
+        const newPlayer = new Tone.Player(url, () => {
+            this.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
+            //this.props.startStop(true)
+            //setTimeout(this.props.startStop, 10, false)
+        }).connect(gain); // should be able to pass buffer in to player per docs but is no work
+      newPlayer.loop = true;
+    });
   }
 
   iosAudioContext() {
@@ -110,7 +130,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     touch: (touched) => dispatch(touch(touched)),
     startStop: (bool) => dispatch(startStop(bool)),
-    setFile: (file) => dispatch(setFile(file))
+    setFile: (file) => dispatch(setFile(file)),
+     setBuffer: (buffer, player, env, interval) => dispatch(setBuffer(buffer, player, env, interval))
   };
 };
 

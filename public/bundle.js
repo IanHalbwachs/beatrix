@@ -32795,8 +32795,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(10);
@@ -32819,10 +32817,6 @@ var _tone = __webpack_require__(98);
 
 var _tone2 = _interopRequireDefault(_tone);
 
-var _createObjectUrl = __webpack_require__(238);
-
-var _createObjectUrl2 = _interopRequireDefault(_createObjectUrl);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32840,7 +32834,6 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.tick = _this.tick.bind(_this);
-    _this.loadFile = _this.loadFile.bind(_this);
     return _this;
   }
 
@@ -32858,9 +32851,6 @@ var App = function (_Component) {
         }, 1 / newProps.interval);
         this.props.setClock(clock);
       }
-      if (newProps.file !== this.props.file) {
-        this.loadFile(newProps.file);
-      }
       if (newProps.flats !== this.props.flats) {
         this.props.player.playbackRate = 1 / Math.pow(2, newProps.flats / 12);
       }
@@ -32869,26 +32859,24 @@ var App = function (_Component) {
       //   this.props.interval = 1 / Math.pow(2, newProps.flats / 12);
       // }
     }
-  }, {
-    key: 'loadFile',
-    value: function loadFile(file) {
-      var _this3 = this;
 
-      var url = (typeof file === 'undefined' ? 'undefined' : _typeof(file)) === 'object' ? (0, _createObjectUrl2.default)(file) : file;
-      var env = new _tone2.default.ScaledEnvelope(0.005, 0, 1, 0.005);
-      env.min = 1;
-      env.max = 0;
-      var gain = new _tone2.default.Gain().toMaster();
-      env.connect(gain.gain);
-      var newBuffer = new _tone2.default.Buffer(url, function () {
-        var newPlayer = new _tone2.default.Player(url, function () {
-          _this3.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
-          //this.props.startStop(true)
-          //setTimeout(this.props.startStop, 10, false)
-        }).connect(gain); // should be able to pass buffer in to player per docs but is no work
-        newPlayer.loop = true;
-      });
-    }
+    // loadFile(file) {
+    //   const url = typeof file === 'object' ? createObjectUrl(file) : file;
+    //   const env = new Tone.ScaledEnvelope(0.005, 0, 1, 0.005);
+    //   env.min = 1;
+    //   env.max = 0;
+    //   const gain = new Tone.Gain().toMaster();
+    //   env.connect(gain.gain);
+    //   const newBuffer = new Tone.Buffer(url, () => {
+    //       const newPlayer = new Tone.Player(url, () => {
+    //           this.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
+    //           //this.props.startStop(true)
+    //           //setTimeout(this.props.startStop, 10, false)
+    //       }).connect(gain); // should be able to pass buffer in to player per docs but is no work
+    //     newPlayer.loop = true;
+    //   });
+    // }
+
   }, {
     key: 'tick',
     value: function tick(time) {
@@ -35171,6 +35159,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(10);
@@ -35192,6 +35182,10 @@ var _FileSelector2 = _interopRequireDefault(_FileSelector);
 var _tone = __webpack_require__(98);
 
 var _tone2 = _interopRequireDefault(_tone);
+
+var _createObjectUrl = __webpack_require__(238);
+
+var _createObjectUrl2 = _interopRequireDefault(_createObjectUrl);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35252,6 +35246,8 @@ var SettingsModal = function (_Component) {
   }, {
     key: 'closeModal',
     value: function closeModal() {
+      var _this2 = this;
+
       console.log('closeModal!! file?', this.props.file);
       if (!this.props.file) {
         console.log('iosAudioContext!! !this.props.file?', !this.props.file);
@@ -35260,7 +35256,30 @@ var SettingsModal = function (_Component) {
       if (!this.props.touched) {
         this.iosAudioContext();
       }
+      setTimeout(function () {
+        return _this2.loadFile(_this2.props.file);
+      }, 50);
       this.setState({ modalIsOpen: false });
+    }
+  }, {
+    key: 'loadFile',
+    value: function loadFile(file) {
+      var _this3 = this;
+
+      var url = (typeof file === 'undefined' ? 'undefined' : _typeof(file)) === 'object' ? (0, _createObjectUrl2.default)(file) : file;
+      var env = new _tone2.default.ScaledEnvelope(0.005, 0, 1, 0.005);
+      env.min = 1;
+      env.max = 0;
+      var gain = new _tone2.default.Gain().toMaster();
+      env.connect(gain.gain);
+      var newBuffer = new _tone2.default.Buffer(url, function () {
+        var newPlayer = new _tone2.default.Player(url, function () {
+          _this3.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
+          //this.props.startStop(true)
+          //setTimeout(this.props.startStop, 10, false)
+        }).connect(gain); // should be able to pass buffer in to player per docs but is no work
+        newPlayer.loop = true;
+      });
     }
   }, {
     key: 'iosAudioContext',
@@ -35274,7 +35293,7 @@ var SettingsModal = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this4 = this;
 
       return _react2.default.createElement(
         'div',
@@ -35311,10 +35330,10 @@ var SettingsModal = function (_Component) {
               _react2.default.createElement(
                 'a',
                 { onClick: function onClick() {
-                    return _this2.iosAudioContext.bind(_this2);
+                    return _this4.iosAudioContext.bind(_this4);
                   } },
                 _react2.default.createElement(_FileSelector2.default, { ios: function ios() {
-                    return _this2.iosAudioContext.bind(_this2);
+                    return _this4.iosAudioContext.bind(_this4);
                   }, close: this.closeModal })
               ),
               '!'
@@ -35379,6 +35398,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     setFile: function setFile(file) {
       return dispatch((0, _index.setFile)(file));
+    },
+    setBuffer: function setBuffer(buffer, player, env, interval) {
+      return dispatch((0, _index.setBuffer)(buffer, player, env, interval));
     }
   };
 };
@@ -35440,7 +35462,6 @@ var FileSelector = function (_Component) {
     value: function handleFile(e) {
       var _this2 = this;
 
-      this.props.touch();
       this.props.setFile(e.target.files[0]);
       setTimeout(function () {
         return _this2.props.close();

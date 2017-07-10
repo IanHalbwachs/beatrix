@@ -4,14 +4,12 @@ import MatrixContainer from './MatrixContainer.js';
 import Header from './Header.js';
 import { setBuffer, startStop, setClock, tock, selectCell } from './index.js';
 import Tone from 'tone';
-import createObjectUrl from 'create-object-url';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.tick = this.tick.bind(this);
-    this.loadFile = this.loadFile.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -23,9 +21,6 @@ class App extends Component {
       }, 1 / newProps.interval);
       this.props.setClock(clock);
     }
-    if (newProps.file !== this.props.file) {
-      this.loadFile(newProps.file);
-    }
     if (newProps.flats !== this.props.flats) {
       this.props.player.playbackRate = 1 / Math.pow(2, newProps.flats / 12);
     }
@@ -35,22 +30,22 @@ class App extends Component {
     // }
   }
 
-  loadFile(file) {
-    const url = typeof file === 'object' ? createObjectUrl(file) : file;
-    const env = new Tone.ScaledEnvelope(0.005, 0, 1, 0.005);
-    env.min = 1;
-    env.max = 0;
-    const gain = new Tone.Gain().toMaster();
-    env.connect(gain.gain);
-    const newBuffer = new Tone.Buffer(url, () => {
-        const newPlayer = new Tone.Player(url, () => {
-            this.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
-            //this.props.startStop(true)
-            //setTimeout(this.props.startStop, 10, false)
-        }).connect(gain); // should be able to pass buffer in to player per docs but is no work
-      newPlayer.loop = true;
-    });
-  }
+  // loadFile(file) {
+  //   const url = typeof file === 'object' ? createObjectUrl(file) : file;
+  //   const env = new Tone.ScaledEnvelope(0.005, 0, 1, 0.005);
+  //   env.min = 1;
+  //   env.max = 0;
+  //   const gain = new Tone.Gain().toMaster();
+  //   env.connect(gain.gain);
+  //   const newBuffer = new Tone.Buffer(url, () => {
+  //       const newPlayer = new Tone.Player(url, () => {
+  //           this.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
+  //           //this.props.startStop(true)
+  //           //setTimeout(this.props.startStop, 10, false)
+  //       }).connect(gain); // should be able to pass buffer in to player per docs but is no work
+  //     newPlayer.loop = true;
+  //   });
+  // }
 
   tick(time) {
     console.log('tick', time);
