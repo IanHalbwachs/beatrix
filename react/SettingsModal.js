@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
-import { touch, startStop, setFile, setBuffer } from './index.js';
+import { touch, startStop, setFile, setBuffer, setClock } from './index.js';
 import FileSelector from './FileSelector';
 import Tone from 'tone';
 import createObjectUrl from 'create-object-url';
@@ -50,15 +50,14 @@ class SettingsModal extends Component {
   }
 
   closeModal() {
-    console.log('closeModal!! file?', this.props.file);
-    if (!this.props.file) {
-      console.log('iosAudioContext!! !this.props.file?', !this.props.file)
-      this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
-    }
+    console.log('closeModal!! file?', this.props.file, 'touched?', this.props.touched);
     if (!this.props.touched) {
       this.iosAudioContext();
     }
-    setTimeout(() => this.loadFile(this.props.file), 50);
+    if (!this.props.file) {
+      this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821")
+    }
+    setTimeout(() => this.loadFile(this.props.file), 100);
     this.setState({modalIsOpen: false});
   }
 
@@ -74,13 +73,15 @@ class SettingsModal extends Component {
             this.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
             //this.props.startStop(true)
             //setTimeout(this.props.startStop, 10, false)
-        }).connect(gain); // should be able to pass buffer in to player per docs but is no work
+        }).connect(gain);
+         // should be able to pass buffer in to player per docs but is no work
       newPlayer.loop = true;
     });
+
   }
 
   iosAudioContext() {
-    console.log('iosAudiContext!! touched ', this.props.touched, 'file', this.props.file)
+    console.log('iosAudiContext!!')
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       const context = new window.AudioContext();
       Tone.setContext(context);
@@ -131,7 +132,7 @@ const mapDispatchToProps = (dispatch) => {
     touch: (touched) => dispatch(touch(touched)),
     startStop: (bool) => dispatch(startStop(bool)),
     setFile: (file) => dispatch(setFile(file)),
-     setBuffer: (buffer, player, env, interval) => dispatch(setBuffer(buffer, player, env, interval))
+    setBuffer: (buffer, player, env, interval) => dispatch(setBuffer(buffer, player, env, interval))
   };
 };
 

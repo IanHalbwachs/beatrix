@@ -34556,14 +34556,16 @@ var MatrixContainer = function (_Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(newProps) {
       console.log('matrixContainer newProps/props', newProps, this.props);
-      if (newProps.playing) {
-        console.log('starting clock??');
-        newProps.clock.start();
-      }
-      if (!newProps.playing && newProps.player) {
-        console.log('stopping clock??');
-        newProps.player.stop();
-        newProps.clock.stop();
+      if (newProps.playing !== this.props.playing) {
+        if (newProps.playing) {
+          console.log('starting clock??');
+          newProps.clock.start();
+        }
+        if (!newProps.playing) {
+          console.log('stopping clock??');
+          newProps.player.stop();
+          newProps.clock.stop();
+        }
       }
     }
   }, {
@@ -35248,17 +35250,16 @@ var SettingsModal = function (_Component) {
     value: function closeModal() {
       var _this2 = this;
 
-      console.log('closeModal!! file?', this.props.file);
-      if (!this.props.file) {
-        console.log('iosAudioContext!! !this.props.file?', !this.props.file);
-        this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821");
-      }
+      console.log('closeModal!! file?', this.props.file, 'touched?', this.props.touched);
       if (!this.props.touched) {
         this.iosAudioContext();
       }
+      if (!this.props.file) {
+        this.props.setFile("https://cdn.glitch.com/2ac0ddc9-234b-4e35-8332-f2685f8adf53%2Fjanet.wav?1493346567821");
+      }
       setTimeout(function () {
         return _this2.loadFile(_this2.props.file);
-      }, 50);
+      }, 100);
       this.setState({ modalIsOpen: false });
     }
   }, {
@@ -35277,14 +35278,15 @@ var SettingsModal = function (_Component) {
           _this3.props.setBuffer(newBuffer, newPlayer, env, newBuffer.duration / 16);
           //this.props.startStop(true)
           //setTimeout(this.props.startStop, 10, false)
-        }).connect(gain); // should be able to pass buffer in to player per docs but is no work
+        }).connect(gain);
+        // should be able to pass buffer in to player per docs but is no work
         newPlayer.loop = true;
       });
     }
   }, {
     key: 'iosAudioContext',
     value: function iosAudioContext() {
-      console.log('iosAudiContext!! touched ', this.props.touched, 'file', this.props.file);
+      console.log('iosAudiContext!!');
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       var context = new window.AudioContext();
       _tone2.default.setContext(context);
